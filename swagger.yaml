@@ -1,718 +1,4114 @@
----
-swagger: "2.0"
+openapi: 3.0.1
 info:
-  description: "This is a sample server Petstore server.  You can find out more about\
-    \ Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).\
-    \  For this sample, you can use the api key `special-key` to test the authorization\
-    \ filters."
-  version: "1.0.5"
-  title: "Swagger Petstore"
-  termsOfService: "http://swagger.io/terms/"
-  contact:
-    email: "apiteam@swagger.io"
-  license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "petstore.swagger.io"
-basePath: "/v2"
-tags:
-- name: "pet"
-  description: "Everything about your Pets"
-  externalDocs:
-    description: "Find out more"
-    url: "http://swagger.io"
-- name: "store"
-  description: "Access to Petstore orders"
-- name: "user"
-  description: "Operations about user"
-  externalDocs:
-    description: "Find out more about our store"
-    url: "http://swagger.io"
-schemes:
-- "https"
-- "http"
+  title: Interfy Signer
+  description: "<!--------------------------------------------------------------------------------------------------------------------->\r\n\r\n<h2>Authentication</h2>\r\n\r\n<p>\r\n\tIn order to call this APIs, you will need an <strong>API key</strong>. Set the API key in the header <span class=\"code\">X-Api-Key</span>:\r\n</p>\r\n\r\n<pre>X-Api-Key: your-app|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</pre>\r\n\r\n<!--------------------------------------------------------------------------------------------------------------------->\r\n<br />\r\n\r\n<h2>HTTP Codes</h2>\r\n\r\n<p>\r\n\tThe APIs will return the following HTTP codes:\r\n</p>\r\n\r\n<table>\r\n\t<thead>\r\n\t\t<tr>\r\n\t\t\t<th>Code</th>\r\n\t\t\t<th>Description</th>\r\n\t\t</tr>\r\n\t</thead>\r\n\t<tbody>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">200 (OK)</strong></td>\r\n\t\t\t<td>Request processed successfully. The response is different for each API, please refer to the operation's documentation</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">400 (Bad Request)</strong></td>\r\n\t\t\t<td>Syntax error. For instance, when a required field was not provided</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">401 (Unauthorized)</strong></td>\r\n\t\t\t<td>API key not provided or invalid</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">403 (Forbidden)</strong></td>\r\n\t\t\t<td>API key is valid, but the application has insufficient permissions to complete the requested operation</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">422 (Unprocessable Entity)</strong></td>\r\n\t\t\t<td>API error. The response is as defined in <a href=\"#model-ErrorModel\">ErrorModel</a></td>\r\n\t\t</tr>\r\n\t</tbody>\r\n</table>\r\n\r\n<br />\r\n\r\n<h3>Error Codes</h3>\r\n\r\n<p>Some of the error codes returned in a 422 response are provided bellow*:</p>\r\n\r\n<ul>\r\n\t<li>CertificateNotFound</li>\r\n\t<li>DocumentNotFound</li>\r\n\t<li>FolderNotFound</li>\r\n\t<li>CpfMismatch</li>\r\n\t<li>CpfNotExpected</li>\r\n\t<li>InvalidFlowAction</li>\r\n\t<li>DocumentInvalidKey</li>\r\n</ul>\r\n\r\n<p style=\"font-size: 0.9em\">\r\n\t*The codes shown above are the main error codes. Nonetheless, this list is not comprehensive. New codes may be added anytime without previous warning.\r\n</p>\r\n\r\n<!--------------------------------------------------------------------------------------------------------------------->\r\n\r\n<br />\r\n\r\n<h2>Webhooks</h2>\r\n\r\n<p>\r\n\tIt is recomended to subscribe to Webhook events <strong>instead</strong> of polling APIs. To do so, enable webhooks and register an URL that will receive a POST request\r\n\twhenever one of the events bellow occur.\r\n</p>\r\n<p>\r\n\tAll requests have the format described in <a href=\"#model-Webhooks.WebhookModel\">Webhooks.WebhookModel</a>.\r\n\tThe data field varies according to the webhook event type:\r\n</p>\r\n\r\n\r\n<table>\r\n\t<thead>\r\n\t\t<tr>\r\n\t\t\t<th>Event type</th>\r\n\t\t\t<th>Description</th>\r\n\t\t\t<th>Payload</th>\r\n\t\t</tr>\r\n\t</thead>\r\n\t<tbody>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">DocumentSigned</strong></td>\r\n\t\t\t<td>Triggered when a document is signed.</td>\r\n\t\t\t<td><a href=\"#model-Webhooks.DocumentSignedModel\">Webhooks.DocumentSignedModel</a></td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">DocumentApproved</strong></td>\r\n\t\t\t<td>Triggered when a document is approved.</td>\r\n\t\t\t<td><a href=\"#model-Webhooks.DocumentApprovedModel\">Webhooks.DocumentApprovedModel</a></td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">DocumentRefused</strong></td>\r\n\t\t\t<td>Triggered when a document is refused.</td>\r\n\t\t\t<td><a href=\"#model-Webhooks.DocumentRefusedModel\">Webhooks.DocumentRefusedModel</a></td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">DocumentConcluded</strong></td>\r\n\t\t\t<td>Triggered when the flow of a document is concluded.</td>\r\n\t\t\t<td><a href=\"#model-Webhooks.DocumentConcludedModel\">Webhooks.DocumentConcludedModel</a></td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">DocumentCanceled</strong></td>\r\n\t\t\t<td>Triggered when the document is canceled.</td>\r\n\t\t\t<td><a href=\"#model-Webhooks.DocumentCanceledModel\">Webhooks.DocumentCanceledModel</a></td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">DocumentsCreated (v1.50.0)</strong></td>\r\n\t\t\t<td>Triggered when one or more documents are created.</td>\r\n\t\t\t<td><a href=\"#model-Webhooks.DocumentsCreatedModel\">Webhooks.DocumentsCreatedModel</a></td>\r\n\t\t</tr>\r\n\t</tbody>\r\n</table>\r\n\r\n<p>\r\n\tTo register your application URL and enable Webhooks, access the integrations section in your <a href=\"/private/organizations\" target=\"_blank\">organization's details page</a>.\r\n</p>\r\n"
+  version: 1.59.0
 paths:
-  /pet/{petId}/uploadImage:
-    post:
+  /api/documents/keys/{key}/signatures:
+    get:
       tags:
-      - "pet"
-      summary: "uploads an image"
-      description: ""
-      operationId: "uploadFile"
-      consumes:
-      - "multipart/form-data"
-      produces:
-      - "application/json"
+        - Documents
+      summary: Validates each signature in a document using the verification code
       parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to update"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "additionalMetadata"
-        in: "formData"
-        description: "Additional data to pass to server"
-        required: false
-        type: "string"
-      - name: "file"
-        in: "formData"
-        description: "file to upload"
-        required: false
-        type: "file"
-      responses:
-        200:
-          description: "successful operation"
+        - name: key
+          in: path
+          description: The verification code presented in the document
+          required: true
           schema:
-            $ref: "#/definitions/ApiResponse"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Documents.DocumentSignaturesInfoModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Documents.DocumentSignaturesInfoModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Documents.DocumentSignaturesInfoModel'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents/validate-signatures:
     post:
       tags:
-      - "pet"
-      summary: "Add a new pet to the store"
-      description: ""
-      operationId: "addPet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Pet"
+        - Documents
+      summary: Validates each signature in the uploaded document
+      description: >-
+        Before calling this API you need to upload the file using the <a
+        href="#operations-Upload-post_api_uploads">Upload API</a> or the <a
+        href="#operations-Upload-post_api_uploads_bytes">Upload Bytes API</a>.
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Signature.SignaturesInfoRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Signature.SignaturesInfoRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Signature.SignaturesInfoRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Signature.SignaturesInfoRequest'
       responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SignerModel'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SignerModel'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SignerModel'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents/{id}/refusal:
+    post:
+      tags:
+        - Documents
+      summary: Refuses a document by providing a reason for the refusal.
+      description: >-
+        The document's flow will pause and can only be resumed by adding a new
+        version of the document (see <a
+        href="#operations-Documents-post_api_documents__id__versions">Add
+        Version API</a>).
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Refusal.RefusalRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Refusal.RefusalRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Refusal.RefusalRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Refusal.RefusalRequest'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents/{id}/versions:
+    post:
+      tags:
+        - Documents
+      summary: Adds a new version for the document.
+      description: "The flow of the document will be restarted. <br /><br />\r\nIf the document was created as an envelope, please use the <a href=\"#operations-Documents-post_api_documents__id__envelope_versions\">Add Envelope Version API</a>"
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Documents.DocumentAddVersionRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Documents.DocumentAddVersionRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Documents.DocumentAddVersionRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Documents.DocumentAddVersionRequest'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents/{id}/envelope/versions:
+    post:
+      tags:
+        - Documents
+      summary: Adds a new version for an envelope.
+      description: The flow of the document will be restarted.
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Documents.EnvelopeAddVersionRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Documents.EnvelopeAddVersionRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Documents.EnvelopeAddVersionRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Documents.EnvelopeAddVersionRequest'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents/{id}:
+    get:
+      tags:
+        - Documents
+      summary: Retrieves the document's details.
+      parameters:
+        - name: id
+          in: path
+          description: Document id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Documents.DocumentModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Documents.DocumentModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Documents.DocumentModel'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    delete:
+      tags:
+        - Documents
+      summary: Deletes a specific document using it's id.
+      parameters:
+        - name: id
+          in: path
+          description: Document id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents/{id}/action-url:
+    post:
+      tags:
+        - Documents
+      summary: >-
+        Retrieves an URL to redirect the user to the first pending action of the
+        document.
+      description: "This API will return an URL that allows an user to sign or approve the document without having to wait to receive an email notification.<br /><br />\r\nIf the document has multiple pending actions, this API will return the URL of the first pending action for the matched user.<br /><br />\r\nAfter the action has been completed, you may call this API again to retrieve the URL for the next action (if any).<br /><br />\r\nPlease note that using the URL returned will be recorded in the evidences of the action as an Application Authentication.<br />"
+      parameters:
+        - name: id
+          in: path
+          description: Document Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Documents.ActionUrlRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Documents.ActionUrlRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Documents.ActionUrlRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Documents.ActionUrlRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Documents.ActionUrlResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Documents.ActionUrlResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Documents.ActionUrlResponse'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents/{id}/flow:
+    post:
+      tags:
+        - Documents
+      summary: Updates the document's flow.
+      parameters:
+        - name: id
+          in: path
+          description: Id of the document
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Documents.DocumentFlowEditRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Documents.DocumentFlowEditRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Documents.DocumentFlowEditRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Documents.DocumentFlowEditRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/FlowActions.DocumentFlowEditResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlowActions.DocumentFlowEditResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/FlowActions.DocumentFlowEditResponse'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents/{id}/notified-emails:
     put:
       tags:
-      - "pet"
-      summary: "Update an existing pet"
-      description: ""
-      operationId: "updatePet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
+        - Documents
+      summary: Updates the document's notified emails
+      description: >-
+        The notified emails are the ones that will be notified after the
+        document is concluded.
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Pet"
+        - name: id
+          in: path
+          description: Id of the document
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Documents.DocumentNotifiedEmailsEditRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Documents.DocumentNotifiedEmailsEditRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Documents.DocumentNotifiedEmailsEditRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Documents.DocumentNotifiedEmailsEditRequest'
       responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-        405:
-          description: "Validation exception"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByStatus:
+        '200':
+          description: Success
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents:
     get:
       tags:
-      - "pet"
-      summary: "Finds Pets by status"
-      description: "Multiple status values can be provided with comma separated strings"
-      operationId: "findPetsByStatus"
-      produces:
-      - "application/json"
-      - "application/xml"
+        - Documents
+      summary: Retrieves the documents of the organization paginating the response.
+      description: You may filter the documents by folder and document type.
       parameters:
-      - name: "status"
-        in: "query"
-        description: "Status values that need to be considered for filter"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-          enum:
-          - "available"
-          - "pending"
-          - "sold"
-          default: "available"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
+        - name: IsConcluded
+          in: query
+          description: >-
+            (DEPRECATED) Please use "Status" parameter instead. Set to true to
+            list concluded documents, false to list pending documents.
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid status value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByTags:
-    get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by tags"
-      description: "Multiple tags can be provided with comma separated strings. Use\
-        \ tag1, tag2, tag3 for testing."
-      operationId: "findPetsByTags"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "tags"
-        in: "query"
-        description: "Tags to filter by"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
+            type: boolean
+        - name: Status
+          in: query
+          description: >-
+            Filters by document status. Will override the "IsConcluded"
+            property.
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid tag value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-      deprecated: true
-  /pet/{petId}:
-    get:
-      tags:
-      - "pet"
-      summary: "Find pet by ID"
-      description: "Returns a single pet"
-      operationId: "getPetById"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to return"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
+            $ref: '#/components/schemas/DocumentFilterStatus'
+        - name: FolderId
+          in: query
           schema:
-            $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - api_key: []
+            type: string
+            format: uuid
+        - name: FolderType
+          in: query
+          schema:
+            $ref: '#/components/schemas/FolderType'
+        - name: DocumentType
+          in: query
+          schema:
+            $ref: '#/components/schemas/DocumentTypes'
+        - name: FilterByDocumentType
+          in: query
+          description: "True if the documents should be filtered by type, use documentType to specify the document type.\r\nIf you want to filter only documents without a type, set this parameter to true and the documentType to null."
+          schema:
+            type: boolean
+        - name: FilterByPendingSignature
+          in: query
+          description: >-
+            True if documents should be filtered only for those that have
+            FlowAction of the type Signer or SignRule
+          schema:
+            type: boolean
+        - name: QueryType
+          in: query
+          schema:
+            $ref: '#/components/schemas/DocumentQueryTypes'
+        - name: ParticipantQ
+          in: query
+          description: Query to filter by participant
+          schema:
+            type: string
+        - name: ParticipantQueryType
+          in: query
+          schema:
+            $ref: '#/components/schemas/ParticipantQueryTypes'
+        - name: Tags
+          in: query
+          description: >-
+            Label/value pairs are separated by "|" (optional) and Tags separated
+            by ",". Only the first 10 pairs will be considered.<br />To search
+            by tag value only, do not use the "|".
+          schema:
+            type: string
+        - name: Q
+          in: query
+          description: Query to filter items.
+          schema:
+            type: string
+        - name: Limit
+          in: query
+          description: Number of items to return.
+          schema:
+            type: integer
+            format: int32
+        - name: Offset
+          in: query
+          description: The offset of the searched page (starting with 0).
+          schema:
+            type: integer
+            format: int32
+        - name: Order
+          in: query
+          schema:
+            $ref: '#/components/schemas/PaginationOrders'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedSearchResponse[Documents.DocumentListModel]
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedSearchResponse[Documents.DocumentListModel]
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedSearchResponse[Documents.DocumentListModel]
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
     post:
       tags:
-      - "pet"
-      summary: "Updates a pet in the store with form data"
-      description: ""
-      operationId: "updatePetWithForm"
-      consumes:
-      - "application/x-www-form-urlencoded"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet that needs to be updated"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "name"
-        in: "formData"
-        description: "Updated name of the pet"
-        required: false
-        type: "string"
-      - name: "status"
-        in: "formData"
-        description: "Updated status of the pet"
-        required: false
-        type: "string"
+        - Documents
+      summary: Creates one or multiple documents.
+      description: "Before calling this API you need to upload the file(s) using the <a href=\"#operations-Upload-post_api_uploads\">Upload API</a> or the <a href=\"#operations-Upload-post_api_uploads_bytes\">Upload Bytes API</a>. <br /><br />\r\nWhen creating a big batch of documents, it is recommended to send multiple requests instead of one big request. For instance, if you want to create 100 documents, \r\nsend 10 requests of 10 documents. In this case it is recommended to use the disablePendingActionNotifications option and, when all requests are finished, use the \r\n<a href=\"#operations-Notifications-post_api_users_notify_pending\">users/notify-pending API</a> to notify participants.<br /><br />\r\nReturns a list of ids of each document created."
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Documents.CreateDocumentRequest'
+            example:
+              files:
+                - displayName: Contrato Swagger
+                  id: 0429c723-a66d-4e55-a912-ff636d1b2745
+                  name: Contrato.pdf
+                  contentType: application/pdf
+              flowActions:
+                - type: Signer
+                  step: 1
+                  user:
+                    name: John Wick
+                    identifier: '81976153069'
+                    email: john.wick@mailinator.com
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Documents.CreateDocumentRequest'
+            example:
+              files:
+                - displayName: Contrato Swagger
+                  id: 0429c723-a66d-4e55-a912-ff636d1b2745
+                  name: Contrato.pdf
+                  contentType: application/pdf
+              flowActions:
+                - type: Signer
+                  step: 1
+                  user:
+                    name: John Wick
+                    identifier: '81976153069'
+                    email: john.wick@mailinator.com
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Documents.CreateDocumentRequest'
+            example:
+              files:
+                - displayName: Contrato Swagger
+                  id: 0429c723-a66d-4e55-a912-ff636d1b2745
+                  name: Contrato.pdf
+                  contentType: application/pdf
+              flowActions:
+                - type: Signer
+                  step: 1
+                  user:
+                    name: John Wick
+                    identifier: '81976153069'
+                    email: john.wick@mailinator.com
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Documents.CreateDocumentRequest'
+            example:
+              files:
+                - displayName: Contrato Swagger
+                  id: 0429c723-a66d-4e55-a912-ff636d1b2745
+                  name: Contrato.pdf
+                  contentType: application/pdf
+              flowActions:
+                - type: Signer
+                  step: 1
+                  user:
+                    name: John Wick
+                    identifier: '81976153069'
+                    email: john.wick@mailinator.com
       responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-    delete:
-      tags:
-      - "pet"
-      summary: "Deletes a pet"
-      description: ""
-      operationId: "deletePet"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "api_key"
-        in: "header"
-        required: false
-        type: "string"
-      - name: "petId"
-        in: "path"
-        description: "Pet id to delete"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /store/order:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Documents.CreateDocumentResult'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Documents.CreateDocumentResult'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Documents.CreateDocumentResult'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents/{id}/cancellation:
     post:
       tags:
-      - "store"
-      summary: "Place an order for a pet"
-      description: ""
-      operationId: "placeOrder"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
+        - Documents
+      summary: Cancels the document by providing a reason for the cancellation.
+      description: '<b>CAUTION: This action cannot be reverted.</b>'
       parameters:
-      - in: "body"
-        name: "body"
-        description: "order placed for purchasing the pet"
-        required: true
-        schema:
-          $ref: "#/definitions/Order"
-      responses:
-        200:
-          description: "successful operation"
+        - name: id
+          in: path
+          description: ''
+          required: true
           schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid Order"
-  /store/order/{orderId}:
-    get:
-      tags:
-      - "store"
-      summary: "Find purchase order by ID"
-      description: "For valid response try integer IDs with value >= 1 and <= 10.\
-        \ Other values will generated exceptions"
-      operationId: "getOrderById"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of pet that needs to be fetched"
-        required: true
-        type: "integer"
-        maximum: 10
-        minimum: 1
-        format: "int64"
+            type: string
+            format: uuid
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Documents.CancelDocumentRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Documents.CancelDocumentRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Documents.CancelDocumentRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Documents.CancelDocumentRequest'
       responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-    delete:
-      tags:
-      - "store"
-      summary: "Delete purchase order by ID"
-      description: "For valid response try integer IDs with positive integer value.\
-        \ Negative or non-integer values will generate API errors"
-      operationId: "deleteOrder"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of the order that needs to be deleted"
-        required: true
-        type: "integer"
-        minimum: 1
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-  /store/inventory:
-    get:
-      tags:
-      - "store"
-      summary: "Returns pet inventories by status"
-      description: "Returns a map of status codes to quantities"
-      operationId: "getInventory"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "object"
-            additionalProperties:
-              type: "integer"
-              format: "int32"
-      security:
-      - api_key: []
-  /user/createWithArray:
+        '200':
+          description: Success
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents/{id}/folder:
     post:
       tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithArrayInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
+        - Documents
+      summary: Moves a document to a folder.
       parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Documents.MoveDocumentRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Documents.MoveDocumentRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Documents.MoveDocumentRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Documents.MoveDocumentRequest'
       responses:
-        default:
-          description: "successful operation"
-  /user/createWithList:
+        '200':
+          description: Success
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents/batch/folder:
     post:
       tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithListInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
+        - Documents
+      summary: Moves a batch of documents to a folder.
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Documents.MoveDocumentBatchRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Documents.MoveDocumentBatchRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Documents.MoveDocumentBatchRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Documents.MoveDocumentBatchRequest'
       responses:
-        default:
-          description: "successful operation"
-  /user/{username}:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BatchItemResultModel'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BatchItemResultModel'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BatchItemResultModel'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents/{id}/signatures-details:
     get:
       tags:
-      - "user"
-      summary: "Get user by user name"
-      description: ""
-      operationId: "getUserByName"
-      produces:
-      - "application/json"
-      - "application/xml"
+        - Documents
+      summary: Retrieves the details of the document's signatures.
+      description: >-
+        This will perform the same validations as verifying the document
+        signatures using the verification code.
       parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be fetched. Use user1 for testing. "
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
+        - name: id
+          in: path
+          description: The Id of the document
+          required: true
           schema:
-            $ref: "#/definitions/User"
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Documents.DocumentSignaturesInfoModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Documents.DocumentSignaturesInfoModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Documents.DocumentSignaturesInfoModel'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents/{id}/ticket:
+    get:
+      tags:
+        - Documents
+      summary: >-
+        Generates a URL (ticket) to download a specific version type of the
+        document.
+      description: "The URL does not require authentication and will be available for 1 hour.\r\n<br /><ul><li><b>Original</b>: the original file provided when the document was created.</li><li><b>OriginalWithMarks</b>: the original file with all marks added (for example when an user approves the document and includes its signature image).</li><li><b>PrinterFriendlyVersion</b>: if the original document is PDF, the version with marks and a appended signature manifest, otherwise a PDF file with the signature manifest.</li><li><b>Signatures</b>: if the original document is PDF, the signed PDF file, otherwise the .p7s file.</li></ul>"
+      parameters:
+        - name: id
+          in: path
+          description: Document id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: type
+          in: query
+          description: The version type to download
+          schema:
+            $ref: '#/components/schemas/DocumentTicketType'
+        - name: preview
+          in: query
+          description: >-
+            If true, when downloading the document, the response will not
+            include the name of the file (useful when embedding the document
+            inside a web page for previewing)
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/TicketModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/TicketModel'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents/{id}/content:
+    get:
+      tags:
+        - Documents
+      summary: Downloads a specific version type of the document.
+      parameters:
+        - name: id
+          in: path
+          description: Document id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: type
+          in: query
+          description: The version type to download
+          schema:
+            $ref: '#/components/schemas/DocumentDownloadTypes'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/documents/{id}/content-b64:
+    get:
+      tags:
+        - Documents
+      summary: >-
+        Downloads a specific version type of the document encoding the bytes in
+        Base 64 format.
+      parameters:
+        - name: id
+          in: path
+          description: Document id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: type
+          in: query
+          description: The version type to download
+          schema:
+            $ref: '#/components/schemas/DocumentDownloadTypes'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Documents.DocumentContentModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Documents.DocumentContentModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Documents.DocumentContentModel'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/document-flows:
+    post:
+      tags:
+        - Flows
+      summary: Creates a flow that can be used to create documents
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/DocumentFlows.DocumentFlowCreateRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentFlows.DocumentFlowCreateRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/DocumentFlows.DocumentFlowCreateRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/DocumentFlows.DocumentFlowCreateRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DocumentFlows.DocumentFlowModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentFlows.DocumentFlowModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/DocumentFlows.DocumentFlowModel'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    get:
+      tags:
+        - Flows
+      summary: List created flows.
+      parameters:
+        - name: Q
+          in: query
+          description: Query to filter items.
+          schema:
+            type: string
+        - name: Limit
+          in: query
+          description: Number of items to return.
+          schema:
+            type: integer
+            format: int32
+        - name: Offset
+          in: query
+          description: The offset of the searched page (starting with 0).
+          schema:
+            type: integer
+            format: int32
+        - name: Order
+          in: query
+          schema:
+            $ref: '#/components/schemas/PaginationOrders'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedSearchResponse[DocumentFlows.DocumentFlowModel]
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedSearchResponse[DocumentFlows.DocumentFlowModel]
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedSearchResponse[DocumentFlows.DocumentFlowModel]
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/document-flows/{id}:
+    get:
+      tags:
+        - Flows
+      summary: Retrieves flow details
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DocumentFlows.DocumentFlowDetailsModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentFlows.DocumentFlowDetailsModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/DocumentFlows.DocumentFlowDetailsModel'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
     put:
       tags:
-      - "user"
-      summary: "Updated user"
-      description: "This can only be done by the logged in user."
-      operationId: "updateUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
+        - Flows
+      summary: Updates a flow.
       parameters:
-      - name: "username"
-        in: "path"
-        description: "name that need to be updated"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "Updated user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/DocumentFlows.DocumentFlowData'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentFlows.DocumentFlowData'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/DocumentFlows.DocumentFlowData'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/DocumentFlows.DocumentFlowData'
       responses:
-        400:
-          description: "Invalid user supplied"
-        404:
-          description: "User not found"
+        '200':
+          description: Success
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
     delete:
       tags:
-      - "user"
-      summary: "Delete user"
-      description: "This can only be done by the logged in user."
-      operationId: "deleteUser"
-      produces:
-      - "application/json"
-      - "application/xml"
+        - Flows
+      summary: Deletes a flow.
       parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be deleted"
-        required: true
-        type: "string"
-      responses:
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-  /user/login:
-    get:
-      tags:
-      - "user"
-      summary: "Logs user into the system"
-      description: ""
-      operationId: "loginUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "query"
-        description: "The user name for login"
-        required: true
-        type: "string"
-      - name: "password"
-        in: "query"
-        description: "The password for login in clear text"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          headers:
-            X-Expires-After:
-              type: "string"
-              format: "date-time"
-              description: "date in UTC when token expires"
-            X-Rate-Limit:
-              type: "integer"
-              format: "int32"
-              description: "calls per hour allowed by the user"
+        - name: id
+          in: path
+          description: ''
+          required: true
           schema:
-            type: "string"
-        400:
-          description: "Invalid username/password supplied"
-  /user/logout:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/folders:
     get:
       tags:
-      - "user"
-      summary: "Logs out current logged in user session"
-      description: ""
-      operationId: "logoutUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters: []
+        - Folders
+      summary: Retrieves all folders paginating the response
+      description: The Q parameter allows you to filter by folder name.
+      parameters:
+        - name: Q
+          in: query
+          description: Query to filter items.
+          schema:
+            type: string
+        - name: Limit
+          in: query
+          description: Number of items to return.
+          schema:
+            type: integer
+            format: int32
+        - name: Offset
+          in: query
+          description: The offset of the searched page (starting with 0).
+          schema:
+            type: integer
+            format: int32
+        - name: Order
+          in: query
+          schema:
+            $ref: '#/components/schemas/PaginationOrders'
+        - name: filterByParent
+          in: query
+          description: if true filters by the parentId parameter
+          schema:
+            type: boolean
+            default: false
+        - name: parentId
+          in: query
+          description: Id of the parent folder
+          schema:
+            type: string
+            format: uuid
       responses:
-        default:
-          description: "successful operation"
-  /user:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedSearchResponse[Folders.FolderInfoModel]
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedSearchResponse[Folders.FolderInfoModel]
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedSearchResponse[Folders.FolderInfoModel]
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
     post:
       tags:
-      - "user"
-      summary: "Create user"
-      description: "This can only be done by the logged in user."
-      operationId: "createUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Created user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
+        - Folders
+      summary: Creates a folder.
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Folders.FolderCreateRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Folders.FolderCreateRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Folders.FolderCreateRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Folders.FolderCreateRequest'
       responses:
-        default:
-          description: "successful operation"
-securityDefinitions:
-  api_key:
-    type: "apiKey"
-    name: "api_key"
-    in: "header"
-  petstore_auth:
-    type: "oauth2"
-    authorizationUrl: "https://petstore.swagger.io/oauth/authorize"
-    flow: "implicit"
-    scopes:
-      read:pets: "read your pets"
-      write:pets: "modify pets in your account"
-definitions:
-  ApiResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
-  Category:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Category"
-  Pet:
-    type: "object"
-    required:
-    - "name"
-    - "photoUrls"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      category:
-        $ref: "#/definitions/Category"
-      name:
-        type: "string"
-        example: "doggie"
-      photoUrls:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          type: "string"
-          xml:
-            name: "photoUrl"
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Folders.FolderInfoModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Folders.FolderInfoModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Folders.FolderInfoModel'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/folders/{id}:
+    get:
       tags:
-        type: "array"
-        xml:
-          wrapped: true
+        - Folders
+      summary: Retrieves the folder's info.
+      parameters:
+        - name: id
+          in: path
+          description: Folder id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Folders.FolderOrganizationModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Folders.FolderOrganizationModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Folders.FolderOrganizationModel'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/folders/{id}/delete:
+    post:
+      tags:
+        - Folders
+      summary: Deletes a folder.
+      parameters:
+        - name: id
+          in: path
+          description: Id of the folder to be deleted
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Folders.FolderDeleteRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Folders.FolderDeleteRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Folders.FolderDeleteRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Folders.FolderDeleteRequest'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/notifications/flow-action-reminder:
+    post:
+      tags:
+        - Notifications
+      summary: >-
+        Sends a reminder email to the user of a flow action. (if the action is
+        pending)
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: >-
+                #/components/schemas/Notifications.CreateFlowActionReminderRequest
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Notifications.CreateFlowActionReminderRequest
+          text/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Notifications.CreateFlowActionReminderRequest
+          application/*+json:
+            schema:
+              $ref: >-
+                #/components/schemas/Notifications.CreateFlowActionReminderRequest
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/users/notify-pending:
+    post:
+      tags:
+        - Notifications
+      summary: >-
+        Sends a reminder email to the e-mails provided on request. Should be
+        used after creating a batch of documents.
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Notifications.EmailListNotificationRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notifications.EmailListNotificationRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Notifications.EmailListNotificationRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Notifications.EmailListNotificationRequest'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/uploads/bytes:
+    post:
+      tags:
+        - Upload
+      summary: >-
+        Uploads a file by sending a JSON request with the bytes in Base 64
+        format.
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Uploads.UploadBytesRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Uploads.UploadBytesRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Uploads.UploadBytesRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Uploads.UploadBytesRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Uploads.UploadBytesModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uploads.UploadBytesModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Uploads.UploadBytesModel'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/uploads:
+    post:
+      tags:
+        - Upload
+      summary: Uploads a file by sending a multipart/form-data request
+      description: "The id returned by this API should be used as paremeter to other APIs.\r\nYou may also use the location property to display a preview of the uploaded file."
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: file
+                  description: File to upload
+                  format: form
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileModel'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+components:
+  schemas:
+    ActionStatus:
+      enum:
+        - Created
+        - Pending
+        - Completed
+        - Refused
+      type: string
+    AgentTypes:
+      enum:
+        - User
+        - Application
+      type: string
+    Agents.AgentModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/AgentTypes'
+        name:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Applications.ApplicationDisplayModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        organizationName:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Attachments.AttachmentModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        filename:
+          type: string
+          description: The attachment's file name.
+          nullable: true
+        fileSize:
+          type: integer
+          description: The attachment's file size in bytes.
+          format: int64
+        mimeType:
+          type: string
+          description: The attachment's file mime type.
+          nullable: true
+        creationDate:
+          type: string
+          description: The date the attachment was created.
+          format: date-time
+        updateDate:
+          type: string
+          description: The date of the last update to the attachment.
+          format: date-time
+        createdBy:
+          $ref: '#/components/schemas/Documents.CreatorModel'
+        isPrivate:
+          type: boolean
+      additionalProperties: false
+    Attachments.AttachmentUploadModel:
+      required:
+        - contentType
+        - displayName
+        - id
+        - name
+      type: object
+      properties:
+        isPrivate:
+          type: boolean
+        displayName:
+          maxLength: 200
+          minLength: 1
+          type: string
+          description: This is the name the document will display in the application.
+        id:
+          minLength: 1
+          type: string
+          description: >-
+            The upload Id as returned by the <a
+            href="#operations-Upload-post_api_uploads">Upload API</a>
+        name:
+          maxLength: 200
+          minLength: 1
+          type: string
+          description: The file's original name.
+        contentType:
+          minLength: 1
+          type: string
+          description: >-
+            The file's mime type. Unless overridden, PDF mime types will be
+            signed as PAdES and all other types as CAdES.
+      additionalProperties: false
+    Attachments.CreateAttachmentResult:
+      type: object
+      properties:
+        uploadId:
+          type: string
+          description: >-
+            The Id of the uploaded attachment, from the request
+            Signer.Api.UploadModel.Id.
+          nullable: true
+        attachmentId:
+          type: string
+          description: The Id of the newly created attachment.
+          format: uuid
+      additionalProperties: false
+    AuthenticationTypes:
+      enum:
+        - SMS
+        - AuthenticatorApp
+        - Email
+        - Login
+        - Application
+        - Selfie
+        - Datavalid
+        - Pix
+        - AccessCode
+        - Whatsapp
+      type: string
+      description: This enum is used as flags, the order and values matter!
+    BatchItemResultModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        success:
+          type: boolean
+        errorMessage:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Billing.BillingInformationModel:
+      required:
+        - city
+        - email
+        - phone
+        - state
+        - zipCode
+      type: object
+      properties:
+        contactName:
+          type: string
+          nullable: true
+        email:
+          minLength: 1
+          type: string
+          format: email
+        phone:
+          minLength: 1
+          type: string
+        type:
+          $ref: '#/components/schemas/BillingInformationTypes'
+        individual:
+          $ref: '#/components/schemas/Billing.IndividualBillingInformationModel'
+        company:
+          $ref: '#/components/schemas/Billing.CompanyBillingInformationModel'
+        streetAddress:
+          type: string
+          nullable: true
+        addressNumber:
+          type: string
+          nullable: true
+        additionalAddressInfo:
+          type: string
+          nullable: true
+        neighborhood:
+          type: string
+          nullable: true
+        address:
+          type: string
+          description: "International address line 1.\r\nCurrently not used"
+          nullable: true
+        address2:
+          type: string
+          description: "International address line 2.\r\nCurrently not used"
+          nullable: true
+        zipCode:
+          minLength: 1
+          type: string
+        city:
+          minLength: 1
+          type: string
+        state:
+          minLength: 1
+          type: string
+        cityCode:
+          type: string
+          description: IBGE Code
+          nullable: true
+      additionalProperties: false
+    Billing.CompanyBillingInformationModel:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        identifier:
+          type: string
+          nullable: true
+        stateRegistration:
+          type: string
+          nullable: true
+        stateRegistrationExempt:
+          type: boolean
+        municipalRegistration:
+          type: string
+          nullable: true
+        municipalRegistrationExempt:
+          type: boolean
+      additionalProperties: false
+    Billing.IndividualBillingInformationModel:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        identifier:
+          type: string
+          nullable: true
+      additionalProperties: false
+    BillingInformationTypes:
+      enum:
+        - Individual
+        - Company
+      type: string
+    CertificateHolderTypes:
+      enum:
+        - Individual
+        - Company
+      type: string
+    CertificateTypes:
+      enum:
+        - A1
+        - A2
+        - A3
+        - A4
+        - S1
+        - S2
+        - S3
+        - S4
+        - T3
+        - T4
+      type: string
+    Certificates.AttributeCertificateInfoModel:
+      type: object
+      properties:
+        details:
+          type: string
+          nullable: true
+        issuer:
+          type: string
+          nullable: true
+      additionalProperties: false
+    DeleteAction:
+      enum:
+        - MoveContent
+        - DeleteContent
+      type: string
+    DocumentDownloadTypes:
+      enum:
+        - Original
+        - PrinterFriendlyVersion
+        - Signatures
+        - OriginalWithMarks
+        - SigningTags
+        - SignatureMarks
+      type: string
+    DocumentFilterStatus:
+      enum:
+        - PendingOrRefused
+        - Concluded
+        - CanceledOrExpired
+        - Pending
+        - Refused
+        - Canceled
+        - Expired
+      type: string
+    DocumentFlows.DocumentFlowCreateRequest:
+      required:
+        - flowActions
+        - name
+      type: object
+      properties:
+        name:
+          maxLength: 200
+          minLength: 1
+          type: string
+        areActionsOrdered:
+          type: boolean
+        flowActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlowActions.FlowActionCreateModel'
+        observers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Observers.ObserverCreateModel'
+          nullable: true
+      additionalProperties: false
+    DocumentFlows.DocumentFlowData:
+      required:
+        - flowActions
+        - name
+      type: object
+      properties:
+        name:
+          maxLength: 200
+          minLength: 1
+          type: string
+        areActionsOrdered:
+          type: boolean
+        flowActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlowActions.FlowActionCreateModel'
+        observers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Observers.ObserverCreateModel'
+          nullable: true
+      additionalProperties: false
+    DocumentFlows.DocumentFlowDetailsModel:
+      type: object
+      properties:
+        areActionsOrdered:
+          type: boolean
+        flowActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlowActions.FlowActionCreateModel'
+          description: >-
+            The list of actions (signers and approvers) that will be in the
+            document.
+          nullable: true
+        observers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Observers.ObserverCreateModel'
+          nullable: true
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        creationDate:
+          type: string
+          description: The date the flow was created.
+          format: date-time
+        updateDate:
+          type: string
+          description: The date of the last update to the flow.
+          format: date-time
+        createdBy:
+          $ref: '#/components/schemas/Documents.CreatorModel'
+      additionalProperties: false
+    DocumentFlows.DocumentFlowModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        creationDate:
+          type: string
+          description: The date the flow was created.
+          format: date-time
+        updateDate:
+          type: string
+          description: The date of the last update to the flow.
+          format: date-time
+        createdBy:
+          $ref: '#/components/schemas/Documents.CreatorModel'
+      additionalProperties: false
+    DocumentMark.DocumentMarkPositionModel:
+      type: object
+      properties:
+        topLeftX:
+          type: number
+          description: X position of the top left point of the mark (in PDF points).
+          format: double
+        topLeftY:
+          type: number
+          description: Y position of the top left point of the mark (in PDF points).
+          format: double
+        width:
+          type: number
+          description: Width of the mark (in PDF points).
+          format: double
+        height:
+          type: number
+          description: Height of the mark (in PDF points).
+          format: double
+        pageNumber:
+          type: integer
+          description: The page number of the mark.
+          format: int32
+          nullable: true
+        type:
+          $ref: '#/components/schemas/DocumentMarkType'
+      additionalProperties: false
+    DocumentMark.PrePositionedDocumentMarkModel:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/DocumentMarkType'
+        uploadId:
+          type: string
+          description: "The file to which this mark should be applied.\r\nIf null it will be applied to all sent files."
+          nullable: true
+        topLeftX:
+          type: number
+          description: X position of the top left point of the mark (in PDF points).
+          format: double
+        topLeftY:
+          type: number
+          description: Y position of the top left point of the mark (in PDF points).
+          format: double
+        width:
+          type: number
+          description: Width of the mark (in PDF points).
+          format: double
+        height:
+          type: number
+          description: Height of the mark (in PDF points).
+          format: double
+        pageNumber:
+          type: integer
+          description: The page number of the mark.
+          format: int32
+          nullable: true
+      additionalProperties: false
+      description: >-
+        Model used to set the position of a document mark before it's associated
+        flow action is completed.
+    DocumentMarkType:
+      enum:
+        - SignatureVisualRepresentation
+        - SignatureInitials
+        - AuthenticationStamp
+      type: string
+    DocumentQueryTypes:
+      enum:
+        - Name
+        - Key
+        - Id
+        - CreatorName
+        - Tag
+      type: string
+    DocumentStatus:
+      enum:
+        - Pending
+        - Refused
+        - FlowConcluded
+        - Concluded
+        - Canceled
+        - Expired
+      type: string
+    DocumentTicketType:
+      enum:
+        - Original
+        - PrinterFriendlyVersion
+        - Signatures
+        - OriginalWithMarks
+        - SigningTags
+        - SignatureMarks
+      type: string
+    DocumentTypes:
+      enum:
+        - Deed
+        - PowerOfAttorney
+        - Prescription
+        - MedicalCertificate
+        - ExamRequest
+        - LabReport
+        - DischargeSummary
+        - ClinicalRecord
+        - DrugDispensing
+        - Vaccination
+        - MedicalReport
+      type: string
+    Documents.ActionUrlRequest:
+      type: object
+      properties:
+        identifier:
+          type: string
+          description: >-
+            The identifier (CPF in Brazil or Cédula de Identidad in
+            Ecuador/Paraguay) of the participant to whom you want to get the
+            ticket.
+          nullable: true
+        emailAddress:
+          type: string
+          description: The email of the participant to whom you want to get the ticket.
+          format: email
+          nullable: true
+        requireEmailAuthentication:
+          type: boolean
+          description: >-
+            If action is an electronic signature and this parameter is set to
+            true, requires e-mail authentication with code in order to complete
+            the signature.
+      additionalProperties: false
+    Documents.ActionUrlResponse:
+      type: object
+      properties:
+        url:
+          type: string
+          description: The URL to redirect the user to the first pending action found.
+          nullable: true
+        embedUrl:
+          type: string
+          description: >-
+            The URL to embed the action in a iframe to use in your own
+            application.
+          nullable: true
+      additionalProperties: false
+    Documents.CancelDocumentRequest:
+      required:
+        - reason
+      type: object
+      properties:
+        reason:
+          maxLength: 500
+          minLength: 1
+          type: string
+      additionalProperties: false
+    Documents.CreateDocumentRequest:
+      required:
+        - files
+        - flowActions
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileUploadModel'
+          description: The files to submit. Each file will create a document.
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachments.AttachmentUploadModel'
+          description: >-
+            The attachments to submit. Each document will have the same
+            attachments.
+          nullable: true
+        xmlNamespaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/XmlNamespaceModel'
+          description: >-
+            Optional parameter for XML documents. This namespace will be used by
+            all files in Signer.Api.Documents.CreateDocumentRequest.Files.
+          nullable: true
+        isEnvelope:
+          type: boolean
+          description: >-
+            If true, groups all files into a single document (the envelope). All
+            files must be in PDF format.
+        envelopeName:
+          type: string
+          description: >-
+            The name of the document if the envelope option is enabled (see
+            "IsEnvelope" property).
+          nullable: true
+        participantsDataFile:
+          $ref: '#/components/schemas/UploadModel'
+        folderId:
+          type: string
+          description: >-
+            The id of the folder in which the document should be placed or null
+            if it should not be placed in any specific folder.
+          format: uuid
+          nullable: true
+        description:
+          maxLength: 600
+          type: string
+          description: "A description to be added to the document(s). This will be presented to all participants in the document details screen and \r\nin pending action notifications."
+          nullable: true
+        flowActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlowActions.FlowActionCreateModel'
+          description: >-
+            The list of actions (signers and approvers) that will be in the
+            document.
+        observers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Observers.ObserverCreateModel'
+          nullable: true
+        disablePendingActionNotifications:
+          type: boolean
+          description: >-
+            If true the notifications of pending actions won't be sent to the
+            participants of the first step.
+        newFolderName:
+          type: string
+          description: >-
+            The name of a new folder to be created and associated to the
+            document. If you do not wish to create a new folder you may set this
+            as null.
+          nullable: true
+        forceCadesSignature:
+          type: boolean
+          description: >-
+            If this property is set to true, then the document will be signed
+            using the CAdES format.
+        notifiedEmails:
+          type: array
+          items:
+            type: string
+          description: The emails to notify when the document is concluded.
+          nullable: true
+        additionalInfo:
+          $ref: '#/components/schemas/Documents.DocumentAdditionalInfoData'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Documents.DocumentTagData'
+          nullable: true
+        expirationDate:
+          type: string
+          description: "The expiration date of the document. Any time information will be discarded, as the expiration will be set \r\nto the last time available for the chosen date in the default timezone."
+          format: date-time
+          nullable: true
+      additionalProperties: false
+    Documents.CreateDocumentResult:
+      type: object
+      properties:
+        uploadId:
+          type: string
+          description: >-
+            The Id of the uploaded file, from the request
+            Signer.Api.UploadModel.Id.
+          nullable: true
+        documentId:
+          type: string
+          description: The Id of the newly created document.
+          format: uuid
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachments.CreateAttachmentResult'
+          description: Result of creating attachments
+          nullable: true
+      additionalProperties: false
+    Documents.CreatorModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Documents.DocumentAddVersionRequest:
+      type: object
+      properties:
+        file:
+          $ref: '#/components/schemas/FileUploadModel'
+        disablePendingActionNotifications:
+          type: boolean
+          description: >-
+            If true the notifications of pending actions won't be sent to the
+            participants of the first step.
+        additionalInfo:
+          $ref: '#/components/schemas/Documents.DocumentAdditionalInfoData'
+      additionalProperties: false
+    Documents.DocumentAdditionalInfoData:
+      type: object
+      properties:
+        healthData:
+          $ref: '#/components/schemas/HealthDocuments.HealthDocumentData'
+        fields:
+          type: object
+          additionalProperties:
+            type: string
+            nullable: true
+          description: Form fields to fill when creating the document.
+          nullable: true
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            nullable: true
+          description: PDF custom metadata to add when creating the document
+          nullable: true
+      additionalProperties: false
+    Documents.DocumentContentModel:
+      type: object
+      properties:
+        bytes:
+          type: string
+          format: byte
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        contentType:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Documents.DocumentFileModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        isSigned:
+          type: boolean
+        isEnvelopePart:
+          type: boolean
+        envelopeStartPage:
+          type: integer
+          format: int32
+          nullable: true
+        numberPages:
+          type: integer
+          format: int32
+          nullable: true
+        mimeType:
+          type: string
+          nullable: true
+        filename:
+          type: string
+          nullable: true
+        creationDate:
+          type: string
+          format: date-time
+      additionalProperties: false
+    Documents.DocumentFlowEditRequest:
+      type: object
+      properties:
+        addedFlowActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlowActions.FlowActionCreateModel'
+          description: "The actions to be added to the flow.\r\nThe Signer.Api.FlowActions.FlowActionCreateModel.Step must be greater or equal to the current pending step."
+          nullable: true
+        editedFlowActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlowActions.FlowActionEditModel'
+          description: "The existing actions to be modified.\r\nFlow actions that have already been completed or are partially completed cannot be edited."
+          nullable: true
+        deletedFlowActionIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: "The Ids of flow actions to be deleted.\r\nFlow actions that have already been completed or are partially completed cannot be deleted."
+          nullable: true
+        addedObservers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Observers.ObserverCreateModel'
+          description: The observers to be added to the document.
+          nullable: true
+        editedObservers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Observers.ObserverEditModel'
+          description: The existing observers to be modified.
+          nullable: true
+        deletedObserverIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: The Ids of observers to be deleted.
+          nullable: true
+      additionalProperties: false
+    Documents.DocumentListModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        creationDate:
+          type: string
+          format: date-time
+        updateDate:
+          type: string
+          format: date-time
+        folder:
+          $ref: '#/components/schemas/Folders.FolderInfoModel'
+        type:
+          $ref: '#/components/schemas/DocumentTypes'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Documents.DocumentTagModel'
+          nullable: true
+      additionalProperties: false
+    Documents.DocumentModel:
+      type: object
+      properties:
+        checksumMd5:
+          type: string
+          description: MD5 checksum of the document's file.
+          nullable: true
+        isDeleted:
+          type: boolean
+          description: True if the document is deleted.
+        flowActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlowActions.FlowActionModel'
+          description: Signers and approvers of the document.
+          nullable: true
+        observers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Observers.ObserverModel'
+          description: Observers of the document.
+          nullable: true
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachments.AttachmentModel'
+          description: Document attachments
+          nullable: true
+        permissions:
+          $ref: '#/components/schemas/Documents.DocumentPermissionsModel'
+        notifiedEmails:
+          type: array
+          items:
+            type: string
+          nullable: true
+        key:
+          type: string
+          nullable: true
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        filename:
+          type: string
+          description: The document's file name.
+          nullable: true
+        fileSize:
+          type: integer
+          description: The document's file size in bytes.
+          format: int64
+        mimeType:
+          type: string
+          description: The document's file mime type.
+          nullable: true
+        hasSignature:
+          type: boolean
+          description: True if the document was already signed once.
+        status:
+          $ref: '#/components/schemas/DocumentStatus'
+        isConcluded:
+          type: boolean
+          description: >-
+            [DEPRECATED] True if all actions requested in the document are
+            concluded. Please use Signer.Api.Documents.DocumentInfoModel.Status
+            instead.
+        folder:
+          $ref: '#/components/schemas/Folders.FolderInfoModel'
+        organization:
+          $ref: '#/components/schemas/Organizations.OrganizationInfoModel'
+        creationDate:
+          type: string
+          description: The date the document was created.
+          format: date-time
+        updateDate:
+          type: string
+          description: >-
+            The date of the last update to the document. This includes the
+            following actions: moving to folder, signing, approving, deleting
+            and editing the flow.
+          format: date-time
+        expirationDate:
+          type: string
+          description: The expiration date of the document in the default timezone.
+          format: date-time
+          nullable: true
+        expirationDateWithoutTime:
+          type: string
+          description: >-
+            The expiration date without time: in yyyy-MM-dd format (useful for
+            display purposes).
+          nullable: true
+        createdBy:
+          $ref: '#/components/schemas/Documents.CreatorModel'
+        description:
+          type: string
+          nullable: true
+        forceCadesSignature:
+          type: boolean
+        isScanned:
+          type: boolean
+          description: True if the document source was a scanning process.
+        isEnvelope:
+          type: boolean
+          description: >-
+            True if the document is an envelope
+            (Signer.Api.Documents.CreateDocumentRequest.IsEnvelope).
+        statusUpdatedBy:
+          $ref: '#/components/schemas/Agents.AgentModel'
+        statusUpdateReason:
+          type: string
+          description: The reason for the status update (see "StatusUpdatedBy" property).
+          nullable: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Documents.DocumentTagModel'
+          nullable: true
+      additionalProperties: false
+    Documents.DocumentNotifiedEmailsEditRequest:
+      type: object
+      properties:
+        emails:
+          type: array
+          items:
+            type: string
+          description: The emails to notify when the document is concluded.
+          nullable: true
+      additionalProperties: false
+    Documents.DocumentPermissionsModel:
+      type: object
+      properties:
+        move:
+          type: boolean
+        editFlow:
+          type: boolean
+      additionalProperties: false
+    Documents.DocumentSignaturesInfoModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        filename:
+          type: string
+          nullable: true
+        mimeType:
+          type: string
+          nullable: true
+        createdBy:
+          $ref: '#/components/schemas/Documents.CreatorModel'
+        isConcluded:
+          type: boolean
+          description: True if all actions requested in the document are concluded.
+        isFile:
+          type: boolean
+        isEnvelope:
+          type: boolean
+        creationDate:
+          type: string
+          format: date-time
+        updateDate:
+          type: string
+          format: date-time
+        signers:
+          type: array
+          items:
+            $ref: '#/components/schemas/SignerModel'
+          description: "List of who signed the document.\r\nEach element in the list contains a validation result."
+          nullable: true
+        status:
+          $ref: '#/components/schemas/DocumentStatus'
+        type:
+          $ref: '#/components/schemas/DocumentTypes'
+      additionalProperties: false
+    Documents.DocumentTagData:
+      required:
+        - value
+      type: object
+      properties:
+        label:
+          maxLength: 150
+          type: string
+          nullable: true
+        value:
+          maxLength: 500
+          minLength: 1
+          type: string
+      additionalProperties: false
+    Documents.DocumentTagModel:
+      required:
+        - value
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        label:
+          maxLength: 150
+          type: string
+          nullable: true
+        value:
+          maxLength: 500
+          minLength: 1
+          type: string
+      additionalProperties: false
+    Documents.EnvelopeAddVersionRequest:
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileUploadModel'
+          nullable: true
+        envelopeName:
+          type: string
+          nullable: true
+        disablePendingActionNotifications:
+          type: boolean
+          description: >-
+            If true the notifications of pending actions won't be sent to the
+            participants of the first step.
+        additionalInfo:
+          $ref: '#/components/schemas/Documents.DocumentAdditionalInfoData'
+      additionalProperties: false
+    Documents.FlowActionPendingModel:
+      type: object
+      properties:
+        signerId:
+          type: string
+          format: uuid
+          nullable: true
+        approverId:
+          type: string
+          format: uuid
+          nullable: true
+        signRuleId:
+          type: string
+          format: uuid
+          nullable: true
+      additionalProperties: false
+    Documents.MoveDocumentBatchRequest:
+      type: object
+      properties:
+        documents:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: The Ids of the documents that will be moved.
+          nullable: true
+        folderId:
+          type: string
+          description: "The Id of the folder to which the document(s) will be moved.\r\nThe folder Id can be null if you want to move the document(s) to no folder or if you want to create a new folder using Signer.Api.Documents.MoveDocumentRequest.NewFolderName."
+          format: uuid
+          nullable: true
+        newFolderName:
+          type: string
+          description: >-
+            The name of the folder to be created and the documents will be moved
+            to. (If Signer.Api.Documents.MoveDocumentRequest.FolderId is null)
+          nullable: true
+      additionalProperties: false
+    Documents.MoveDocumentRequest:
+      type: object
+      properties:
+        folderId:
+          type: string
+          description: "The Id of the folder to which the document(s) will be moved.\r\nThe folder Id can be null if you want to move the document(s) to no folder or if you want to create a new folder using Signer.Api.Documents.MoveDocumentRequest.NewFolderName."
+          format: uuid
+          nullable: true
+        newFolderName:
+          type: string
+          description: >-
+            The name of the folder to be created and the documents will be moved
+            to. (If Signer.Api.Documents.MoveDocumentRequest.FolderId is null)
+          nullable: true
+      additionalProperties: false
+    ErrorModel:
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        details:
+          type: object
+          additionalProperties:
+            type: string
+            nullable: true
+          nullable: true
+      additionalProperties: false
+    FileModel:
+      required:
+        - contentType
+      type: object
+      properties:
+        location:
+          type: string
+          nullable: true
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        contentType:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    FileUploadModel:
+      required:
+        - contentType
+        - displayName
+        - id
+        - name
+      type: object
+      properties:
+        displayName:
+          maxLength: 200
+          minLength: 1
+          type: string
+          description: This is the name the document will display in the application.
+        id:
+          minLength: 1
+          type: string
+          description: >-
+            The upload Id as returned by the <a
+            href="#operations-Upload-post_api_uploads">Upload API</a>
+        name:
+          maxLength: 200
+          minLength: 1
+          type: string
+          description: The file's original name.
+        contentType:
+          minLength: 1
+          type: string
+          description: >-
+            The file's mime type. Unless overridden, PDF mime types will be
+            signed as PAdES and all other types as CAdES.
+      additionalProperties: false
+    FlowActionType:
+      enum:
+        - Signer
+        - Approver
+        - SignRule
+      type: string
+    FlowActions.ApprovalModel:
+      type: object
+      properties:
+        flowActionId:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date-time
+        userId:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        identifier:
+          type: string
+          nullable: true
+        emailAddress:
+          type: string
+          nullable: true
+      additionalProperties: false
+    FlowActions.DocumentFlowEditResponse:
+      type: object
+      properties:
+        rectifiedParticipants:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlowActions.RectifiedParticipantModel'
+          nullable: true
+      additionalProperties: false
+    FlowActions.FlowActionCreateModel:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/FlowActionType'
+        step:
+          type: integer
+          description: The order in which this action should take place.
+          format: int32
+        user:
+          $ref: '#/components/schemas/Users.ParticipantUserModel'
+        numberRequiredSignatures:
+          type: integer
+          description: Number of required signatures (if type is SignRule)
+          format: int32
+          nullable: true
+        ruleName:
+          type: string
+          description: Name of the rule (if type is SignRule)
+          nullable: true
+        allowRuleFlowToContinueIfRefused:
+          type: boolean
+          description: >-
+            If true and the action is a Sign Rule, allows the document flow to
+            continue while there are enough users that can fulfill the rule.
+          nullable: true
+        title:
+          type: string
+          description: Title of the participant
+          nullable: true
+        signRuleUsers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Users.ParticipantUserModel'
+          nullable: true
+        prePositionedMarks:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentMark.PrePositionedDocumentMarkModel'
+          nullable: true
+        allowElectronicSignature:
+          type: boolean
+          description: >-
+            Set to true if the electronic signature option should be available.
+            (only if the type of the action is Signer or SignRule)
+          nullable: true
+        requireSmsAuthenticationToSignElectronically:
+          type: boolean
+          description: >-
+            Requires the user to confirm a code sent to his phone to sign
+            electronically. (If
+            Signer.Api.FlowActions.FlowActionCreateModel.AllowElectronicSignature
+            is true)
+          nullable: true
+        requireWhatsappAuthenticationToSignElectronically:
+          type: boolean
+          description: >-
+            Requires the user to confirm a code sent to his Whatsapp number to
+            sign electronically. (If
+            Signer.Api.FlowActions.FlowActionCreateModel.AllowElectronicSignature
+            is true)
+          nullable: true
+        requireAuthenticatorAppToSignElectronically:
+          type: boolean
+          description: >-
+            Requires the user to enter a one-time password (OTP) to sign
+            electronically. (If
+            Signer.Api.FlowActions.FlowActionCreateModel.AllowElectronicSignature
+            is true)
+          nullable: true
+        requireSelfieAuthenticationToSignElectronically:
+          type: boolean
+          description: >-
+            Requires the user to take a selfie to sign electronically. (If
+            Signer.Api.FlowActions.FlowActionCreateModel.AllowElectronicSignature
+            is true)
+          nullable: true
+        requireDatavalidAuthenticationToSignElectronically:
+          type: boolean
+          description: >-
+            Requires the user to take a selfie to sign electronically. This
+            selfie will be validated by SERPRO's Datavalid. (If
+            Signer.Api.FlowActions.FlowActionCreateModel.AllowElectronicSignature
+            is true)
+          nullable: true
+        requirePixAuthenticationToSignElectronically:
+          type: boolean
+          description: >-
+            Requires the user to pay a Pix to sign electronically. (If
+            Signer.Api.FlowActions.FlowActionCreateModel.AllowElectronicSignature
+            is true)
+          nullable: true
+        disableEmailAuthenticationToSignElectronically:
+          type: boolean
+          description: >-
+            Disables e-mail authentication to sign electronically. This option
+            can only be used if SMS or Whatsapp authentication was required. (If
+            Signer.Api.FlowActions.FlowActionCreateModel.AllowElectronicSignature
+            is true)
+          nullable: true
+        requiredCertificateTypeToSign:
+          $ref: '#/components/schemas/CertificateTypes'
+        requireCompanyCertificate:
+          type: boolean
+          description: >-
+            [DEPRECATED] Requires the user to sign the document with a company
+            certificate (e.g. e-CNPJ). Please use
+            Signer.Api.FlowActions.FlowActionCreateModel.RequiredCertificateHolderTypeToSign
+            instead.
+          nullable: true
+        requiredCompanyIdentifier:
+          type: string
+          description: >-
+            Requires the user to sign the document with a company certificate
+            (e.g. e-CNPJ) that has the provided company identifier.
+          nullable: true
+        requiredCertificateHolderTypeToSign:
+          $ref: '#/components/schemas/CertificateHolderTypes'
+        xadesOptions:
+          $ref: '#/components/schemas/FlowActions.XadesOptionsModel'
+        signatureInitialsMode:
+          $ref: '#/components/schemas/SignatureInitialsModes'
+      additionalProperties: false
+    FlowActions.FlowActionEditModel:
+      type: object
+      properties:
+        flowActionId:
+          type: string
+          description: The Id of the flow action being modified.
+          format: uuid
+        step:
+          type: integer
+          description: "The new step of the action.\r\nThis must be greater or equal to the current pending step."
+          format: int32
+        participantEmailAddress:
+          type: string
+          description: >-
+            The new email address of the action's participant (if the type is
+            Signer.Api.FlowActionType.Signer or
+            Signer.Api.FlowActionType.Approver).
+          format: email
+          nullable: true
+        ruleName:
+          type: string
+          description: >-
+            The new rule name (if the type is
+            Signer.Api.FlowActionType.SignRule).
+          nullable: true
+        signRuleUsers:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlowActions.SignRuleUserEditModel'
+          description: >-
+            The rule users to be edited (if the type is
+            Signer.Api.FlowActionType.SignRule).
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        prePositionedMarks:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentMark.PrePositionedDocumentMarkModel'
+          nullable: true
+        signatureInitialsMode:
+          $ref: '#/components/schemas/SignatureInitialsModes'
+      additionalProperties: false
+    FlowActions.FlowActionModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        creationDate:
+          type: string
+          format: date-time
+        pendingDate:
+          type: string
+          format: date-time
+          nullable: true
+        updateDate:
+          type: string
+          format: date-time
+        user:
+          $ref: '#/components/schemas/Users.ParticipantUserModel'
+        numberRequiredSignatures:
+          type: integer
+          description: Number of required signatures if type is SignRule
+          format: int32
+        signRuleUsers:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlowActions.SignRuleUserModel'
+          description: Users that are allowed to sign if type is SignRule
+          nullable: true
+        marks:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentMark.DocumentMarkPositionModel'
+          nullable: true
+        allowElectronicSignature:
+          type: boolean
+          description: >-
+            True if the electronic signature option is available for this action
+            (only if the type of the action is Signer or SignRule)
+        requireEmailAuthenticationToSignElectronically:
+          type: boolean
+          description: "Requires the user to confirm a code sent to his e-mail to sign electronically. (If Signer.Api.FlowActions.FlowActionModel.AllowElectronicSignature is true)\r\nThis requirement is not enforced if the user is logged in or was authenticated by an application (embedded signature mode)."
+          nullable: true
+        requireSmsAuthenticationToSignElectronically:
+          type: boolean
+          description: >-
+            Requires the user to confirm a code sent to his phone to sign
+            electronically. (If
+            Signer.Api.FlowActions.FlowActionModel.AllowElectronicSignature is
+            true)
+          nullable: true
+        requireWhatsappAuthenticationToSignElectronically:
+          type: boolean
+          description: >-
+            Requires the user to confirm a code sent to his Whatsapp number to
+            sign electronically. (If
+            Signer.Api.FlowActions.FlowActionModel.AllowElectronicSignature is
+            true)
+          nullable: true
+        requireAuthenticatorAppToSignElectronically:
+          type: boolean
+          description: >-
+            Requires the user to enter a one-time password (OTP) to sign
+            electronically. (If
+            Signer.Api.FlowActions.FlowActionModel.AllowElectronicSignature is
+            true)
+          nullable: true
+        requireSelfieAuthenticationToSignElectronically:
+          type: boolean
+          description: >-
+            Requires the user to take a selfie to sign electronically. (If
+            Signer.Api.FlowActions.FlowActionModel.AllowElectronicSignature is
+            true)
+          nullable: true
+        requireDatavalidAuthenticationToSignElectronically:
+          type: boolean
+          description: >-
+            Requires the user to take a selfie to sign electronically. This
+            selfie will be validated by SERPRO's Datavalid. (If
+            Signer.Api.FlowActions.FlowActionModel.AllowElectronicSignature is
+            true)
+          nullable: true
+        requirePixAuthenticationToSignElectronically:
+          type: boolean
+          description: >-
+            Requires the user to pay a Pix to sign electronically. The payer's
+            CPF must be the same as that of the user who will be signing. (If
+            Signer.Api.FlowActions.FlowActionModel.AllowElectronicSignature is
+            true)
+          nullable: true
+        requiredCertificateTypeToSign:
+          $ref: '#/components/schemas/CertificateTypes'
+        requireCompanyCertificate:
+          type: boolean
+          description: >-
+            [DEPRECATED] The user is required to sign the document with a
+            company certificate (e.g. e-CNPJ). Please use
+            Signer.Api.FlowActions.FlowActionModel.RequiredCertificateHolderTypeToSign
+            instead.
+          nullable: true
+        requiredCompanyIdentifier:
+          type: string
+          description: >-
+            The user is required to sign the document with a company certificate
+            (e.g. e-CNPJ) that has the provided company identifier.
+          nullable: true
+        requiredCertificateHolderTypeToSign:
+          $ref: '#/components/schemas/CertificateHolderTypes'
+        refusalReason:
+          type: string
+          nullable: true
+        signatureInitialsMode:
+          $ref: '#/components/schemas/SignatureInitialsModes'
+        isElectronic:
+          type: boolean
+          nullable: true
+        allowRuleFlowToContinueIfRefused:
+          type: boolean
+        type:
+          $ref: '#/components/schemas/FlowActionType'
+        status:
+          $ref: '#/components/schemas/ActionStatus'
+        step:
+          type: integer
+          format: int32
+        ruleName:
+          type: string
+          description: Name of the rule if type is SignRule
+          nullable: true
+        title:
+          type: string
+          description: Title of the participant
+          nullable: true
+      additionalProperties: false
+    FlowActions.PendingActionModel:
+      type: object
+      properties:
+        signerId:
+          type: string
+          format: uuid
+          nullable: true
+        signRuleId:
+          type: string
+          format: uuid
+          nullable: true
+        approverId:
+          type: string
+          format: uuid
+          nullable: true
+      additionalProperties: false
+      description: Contains the ids of the pending actions if there are any.
+    FlowActions.RectifiedParticipantModel:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        requested:
+          $ref: '#/components/schemas/Users.ParticipantUserModel'
+        rectified:
+          $ref: '#/components/schemas/Users.ParticipantUserModel'
+      additionalProperties: false
+    FlowActions.SignRuleUserEditModel:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        emailAddress:
+          type: string
+          format: email
+          nullable: true
+      additionalProperties: false
+    FlowActions.SignRuleUserModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        identifier:
+          type: string
+          description: >-
+            The user identifier (CPF in Brazil or Cédula de Identidad in
+            Ecuador/Paraguay).
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        signatureDate:
+          type: string
+          format: date-time
+          nullable: true
+        isElectronic:
+          type: boolean
+          nullable: true
+        refusalDate:
+          type: string
+          format: date-time
+          nullable: true
+        hasRefused:
+          type: boolean
+        refusalReason:
+          type: string
+          nullable: true
+      additionalProperties: false
+    FlowActions.SignatureModel:
+      type: object
+      properties:
+        flowActionId:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date-time
+        userId:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        identifier:
+          type: string
+          nullable: true
+        emailAddress:
+          type: string
+          nullable: true
+      additionalProperties: false
+    FlowActions.XadesOptionsModel:
+      type: object
+      properties:
+        signatureType:
+          $ref: '#/components/schemas/XadesSignatureTypes'
+        elementToSignIdentifierType:
+          $ref: '#/components/schemas/XadesElementIdentifierTypes'
+        elementToSignIdentifier:
+          type: string
+          description: "A string used to identify the element that should be signed.\r\nIf the Signer.Api.FlowActions.XadesOptionsModel.ElementToSignIdentifierType is Signer.Api.XadesElementIdentifierTypes.Id, this string is the Id of the element to be signed.\r\nIf the Signer.Api.FlowActions.XadesOptionsModel.ElementToSignIdentifierType is Signer.Api.XadesElementIdentifierTypes.XPath, this string is the XPath to the element to be signed."
+          nullable: true
+        insertionOption:
+          $ref: '#/components/schemas/XadesInsertionOptions'
+        disableXPathTransformation:
+          type: boolean
+          description: "By default the XPath transformation is applied in all XAdES signatures. You can set a flow action to not apply the transformation by setting this option to true.\r\nWARNING: If you disable the XPath transformation the signatures might be considered invalid in some validators if the same XML element is signed multiple times."
+      additionalProperties: false
+    FolderType:
+      enum:
+        - Normal
+        - WithoutFolder
+      type: string
+    Folders.FolderCreateRequest:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+        parentId:
+          type: string
+          description: Id of the parent folder. Set as null to create the folder as root.
+          format: uuid
+          nullable: true
+      additionalProperties: false
+    Folders.FolderDeleteRequest:
+      type: object
+      properties:
+        deleteAction:
+          $ref: '#/components/schemas/DeleteAction'
+        destinationFolderId:
+          type: string
+          description: "The folder to which the documents will be moved (if Signer.Api.Folders.FolderDeleteRequest.DeleteAction is Signer.Api.DeleteAction.MoveContent).\r\nThis value can be null if you want to keep the documents with no folder."
+          format: uuid
+          nullable: true
+      additionalProperties: false
+    Folders.FolderInfoModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        parentId:
+          type: string
+          format: uuid
+          nullable: true
+      additionalProperties: false
+    Folders.FolderOrganizationModel:
+      type: object
+      properties:
+        organization:
+          $ref: '#/components/schemas/Organizations.OrganizationInfoModel'
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        parentId:
+          type: string
+          format: uuid
+          nullable: true
+      additionalProperties: false
+    HealthDocuments.HealthDocumentData:
+      required:
+        - professional
+      type: object
+      properties:
+        professional:
+          $ref: '#/components/schemas/HealthDocuments.HealthProfessionalModel'
         items:
-          xml:
-            name: "tag"
-          $ref: "#/definitions/Tag"
-      status:
-        type: "string"
-        description: "pet status in the store"
-        enum:
-        - "available"
-        - "pending"
-        - "sold"
-    xml:
-      name: "Pet"
-  Tag:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Tag"
-  Order:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      petId:
-        type: "integer"
-        format: "int64"
-      quantity:
-        type: "integer"
-        format: "int32"
-      shipDate:
-        type: "string"
-        format: "date-time"
-      status:
-        type: "string"
-        description: "Order Status"
-        enum:
-        - "placed"
-        - "approved"
-        - "delivered"
-      complete:
-        type: "boolean"
-    xml:
-      name: "Order"
-  User:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      username:
-        type: "string"
-      firstName:
-        type: "string"
-      lastName:
-        type: "string"
-      email:
-        type: "string"
-      password:
-        type: "string"
-      phone:
-        type: "string"
-      userStatus:
-        type: "integer"
-        format: "int32"
-        description: "User Status"
-    xml:
-      name: "User"
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
+          type: array
+          items:
+            $ref: '#/components/schemas/HealthDocuments.HealthItemModel'
+          description: >-
+            Additional strutctured information for health documents. Can be used
+            to display medication information.
+          nullable: true
+      additionalProperties: false
+      description: >-
+        This option is only valid for the following document types:
+        Prescription, MedicalCertificate, ExamRequest, LabReport,
+        DischargeSummary, ClinicalRecord, DrugDispensing, Vaccination and
+        MedicalReport
+    HealthDocuments.HealthItemModel:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+        description:
+          type: string
+          nullable: true
+        description2:
+          type: string
+          nullable: true
+      additionalProperties: false
+    HealthDocuments.HealthProfessionalModel:
+      required:
+        - id
+        - region
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: The professional ID number (e.g CRM)
+        region:
+          minLength: 1
+          type: string
+          description: The professional ID region (a.k.a UF)
+      additionalProperties: false
+    Invoices.InvoiceTotalModel:
+      type: object
+      properties:
+        transactionType:
+          $ref: '#/components/schemas/TransactionTypes'
+        price:
+          $ref: '#/components/schemas/Transactions.TransactionPriceModel'
+        total:
+          type: integer
+          format: int32
+        totalInTrialPeriod:
+          type: integer
+          format: int32
+        value:
+          type: number
+          format: double
+      additionalProperties: false
+    Invoices.UpdateInvoicePaymentStatusRequest:
+      type: object
+      properties:
+        isPaid:
+          type: boolean
+      additionalProperties: false
+    NotarizationStatus:
+      enum:
+        - Pending
+        - Notarized
+        - Rejected
+      type: string
+    NotaryTypes:
+      enum:
+        - Test
+        - CNB
+        - CORI
+        - ONR
+      type: string
+    Notifications.CreateFlowActionReminderRequest:
+      required:
+        - documentId
+        - flowActionId
+      type: object
+      properties:
+        documentId:
+          type: string
+          format: uuid
+        flowActionId:
+          type: string
+          format: uuid
+      additionalProperties: false
+    Notifications.EmailListNotificationRequest:
+      required:
+        - emails
+      type: object
+      properties:
+        emails:
+          type: array
+          items:
+            type: string
+      additionalProperties: false
+    Observers.ObserverCreateModel:
+      required:
+        - user
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/Users.ParticipantUserModel'
+      additionalProperties: false
+    Observers.ObserverEditModel:
+      type: object
+      properties:
+        observerId:
+          type: string
+          description: Id of the observer being modified.
+          format: uuid
+        emailAddress:
+          type: string
+          description: The new email of the observer.
+          nullable: true
+      additionalProperties: false
+    Observers.ObserverModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user:
+          $ref: '#/components/schemas/Users.ParticipantUserModel'
+      additionalProperties: false
+    OrganizationType:
+      enum:
+        - Normal
+        - Personal
+        - SharedWithMe
+      type: string
+    Organizations.OrganizationInfoModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        identifier:
+          type: string
+          description: The organization identifier (CNPJ)
+          nullable: true
+        owner:
+          $ref: '#/components/schemas/Organizations.OrganizationOwnerInfoModel'
+      additionalProperties: false
+    Organizations.OrganizationOwnerInfoModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+      additionalProperties: false
+    PaginatedSearchResponse[DocumentFlows.DocumentFlowModel]:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentFlows.DocumentFlowModel'
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+        nextCursor:
+          type: string
+          nullable: true
+      additionalProperties: false
+    PaginatedSearchResponse[Documents.DocumentListModel]:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Documents.DocumentListModel'
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+        nextCursor:
+          type: string
+          nullable: true
+      additionalProperties: false
+    PaginatedSearchResponse[Folders.FolderInfoModel]:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Folders.FolderInfoModel'
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+        nextCursor:
+          type: string
+          nullable: true
+      additionalProperties: false
+    PaginationOrders:
+      enum:
+        - Asc
+        - Desc
+      type: string
+    ParticipantQueryTypes:
+      enum:
+        - Name
+        - Identifier
+        - Email
+        - Phone
+      type: string
+    Probability:
+      enum:
+        - VeryLow
+        - Low
+        - High
+        - VeryHigh
+      type: string
+    Refusal.RefusalModel:
+      type: object
+      properties:
+        flowActionId:
+          type: string
+          format: uuid
+          nullable: true
+        reason:
+          type: string
+          nullable: true
+        date:
+          type: string
+          format: date-time
+        userId:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        identifier:
+          type: string
+          nullable: true
+        emailAddress:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Refusal.RefusalRequest:
+      required:
+        - reason
+      type: object
+      properties:
+        reason:
+          maxLength: 500
+          minLength: 1
+          type: string
+      additionalProperties: false
+    Signature.DatavalidSelfieValidationResponse:
+      type: object
+      properties:
+        available:
+          type: boolean
+        probability:
+          $ref: '#/components/schemas/Probability'
+        similarity:
+          type: number
+          format: float
+          nullable: true
+      additionalProperties: false
+    Signature.EvidencesModel:
+      type: object
+      properties:
+        ipAddress:
+          type: string
+          nullable: true
+        authenticationTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthenticationTypes'
+          description: >-
+            A list containing the the authentication types used when signing the
+            document.
+          nullable: true
+        accountVerifiedEmail:
+          type: string
+          description: "If the user was logged-in when he signed the document this is the verified email of his account.\r\nIf Signer.Api.Signature.EvidencesModel.AuthenticationTypes doesn't contains Signer.Api.AuthenticationTypes.Login this will be null."
+          nullable: true
+        authenticatedEmail:
+          type: string
+          description: "The email to which the notification to sign the document was sent.\r\nIf Signer.Api.Signature.EvidencesModel.AuthenticationTypes doesn't contains Signer.Api.AuthenticationTypes.Email this will be null."
+          nullable: true
+        authenticatedPhoneNumberLastDigits:
+          type: string
+          description: "The last four digits of the phone number to which the SMS confirmation code was sent.\r\nIf Signer.Api.Signature.EvidencesModel.AuthenticationTypes doesn't contains Signer.Api.AuthenticationTypes.SMS this will be null."
+          nullable: true
+        authenticatedApplication:
+          $ref: '#/components/schemas/Applications.ApplicationDisplayModel'
+        authenticatedSelfie:
+          $ref: '#/components/schemas/Signature.SelfieModel'
+        authenticatedPix:
+          $ref: '#/components/schemas/Signature.PixAuthenticationModel'
+        geolocation:
+          $ref: '#/components/schemas/Signature.GeolocationModel'
+        timestamp:
+          type: string
+          format: date-time
+        evidencesSha256:
+          type: string
+          description: SHA-256 Hash (Base64 encoded) of the evidences JSON file
+          nullable: true
+        authenticatedPhoneNumber:
+          type: string
+          description: "The phone number to which the SMS confirmation code was sent.\r\nIf Signer.Api.Signature.EvidencesModel.AuthenticationTypes doesn't contains Signer.Api.AuthenticationTypes.SMS this will be null."
+          nullable: true
+        file:
+          type: string
+          description: The evidences JSON file in bytes.
+          format: byte
+          nullable: true
+        fileTicket:
+          type: string
+          description: Ticket to download the evidences JSON file.
+          nullable: true
+      additionalProperties: false
+    Signature.GeolocationModel:
+      type: object
+      properties:
+        latitude:
+          type: number
+          format: double
+          nullable: true
+        longitude:
+          type: number
+          format: double
+          nullable: true
+        accuracy:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    Signature.PixAuthenticationModel:
+      type: object
+      properties:
+        endToEndId:
+          type: string
+          nullable: true
+        pixKey:
+          type: string
+          nullable: true
+        paymentDate:
+          type: string
+          format: date-time
+      additionalProperties: false
+    Signature.SelfieModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        contentB64:
+          type: string
+          nullable: true
+        mimeType:
+          type: string
+          nullable: true
+        validationResponse:
+          $ref: '#/components/schemas/Signature.DatavalidSelfieValidationResponse'
+      additionalProperties: false
+    Signature.SignaturesInfoRequest:
+      required:
+        - fileId
+        - mimeType
+      type: object
+      properties:
+        fileId:
+          type: string
+          description: Id of the uploaded file.
+          format: uuid
+        mimeType:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    SignatureInitialsModes:
+      enum:
+        - None
+        - Optional
+        - Required
+      type: string
+    SignerModel:
+      type: object
+      properties:
+        subjectName:
+          type: string
+          nullable: true
+        emailAddress:
+          type: string
+          nullable: true
+        issuerName:
+          type: string
+          nullable: true
+        identifier:
+          type: string
+          nullable: true
+        companyName:
+          type: string
+          nullable: true
+        companyIdentifier:
+          type: string
+          nullable: true
+        isElectronic:
+          type: boolean
+        isTimestamp:
+          type: boolean
+        signingTime:
+          type: string
+          format: date-time
+          nullable: true
+        certificateThumbprint:
+          type: string
+          nullable: true
+        evidences:
+          $ref: '#/components/schemas/Signature.EvidencesModel'
+        attributeCertificates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Certificates.AttributeCertificateInfoModel'
+          nullable: true
+        validationResults:
+          $ref: '#/components/schemas/ValidationResultsModel'
+      additionalProperties: false
+    TicketModel:
+      type: object
+      properties:
+        location:
+          type: string
+          nullable: true
+      additionalProperties: false
+    TransactionPricingTypes:
+      enum:
+        - NoCharge
+        - Simple
+        - Range
+      type: string
+    TransactionTypes:
+      enum:
+        - Document
+        - Signature
+        - ElectronicSignature
+        - Approval
+        - Notarization
+        - Timestamper
+        - Sms
+        - Whatsapp
+        - Datavalid
+        - PixAuthentication
+        - Envelope
+      type: string
+    Transactions.PriceRangeModel:
+      required:
+        - price
+      type: object
+      properties:
+        limit:
+          type: integer
+          description: "The upper limit of the price range.\r\nIf the limit is null, this is the price when the number of transactions exceed the limit of all the other ranges."
+          format: int32
+          nullable: true
+        price:
+          type: number
+          format: double
+      additionalProperties: false
+    Transactions.TransactionPriceModel:
+      required:
+        - pricingType
+        - transactionType
+      type: object
+      properties:
+        transactionType:
+          $ref: '#/components/schemas/TransactionTypes'
+        pricingType:
+          $ref: '#/components/schemas/TransactionPricingTypes'
+        price:
+          type: number
+          description: >-
+            Price of the transaction type (if
+            Signer.Api.Transactions.TransactionPriceModel.PricingType is
+            Signer.Api.TransactionPricingTypes.Simple)
+          format: double
+          nullable: true
+        priceRanges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transactions.PriceRangeModel'
+          description: >-
+            Price ranges of transaction type (if
+            Signer.Api.Transactions.TransactionPriceModel.PricingType is
+            Signer.Api.TransactionPricingTypes.Range)
+          nullable: true
+        limit:
+          type: integer
+          format: int32
+          nullable: true
+      additionalProperties: false
+    UploadModel:
+      required:
+        - contentType
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: >-
+            The upload Id as returned by the <a
+            href="#operations-Upload-post_api_uploads">Upload API</a>
+        name:
+          maxLength: 200
+          minLength: 1
+          type: string
+          description: The file's original name.
+        contentType:
+          minLength: 1
+          type: string
+          description: >-
+            The file's mime type. Unless overridden, PDF mime types will be
+            signed as PAdES and all other types as CAdES.
+      additionalProperties: false
+    Uploads.UploadBytesModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the uploaded file so it can be used to create documents.
+          nullable: true
+        size:
+          type: integer
+          description: The size in bytes of the received file.
+          format: int64
+        digest:
+          type: string
+          description: >-
+            The MD5 digest (hash) of the received file. Can be used for
+            integrity checks.
+          nullable: true
+      additionalProperties: false
+    Uploads.UploadBytesRequest:
+      required:
+        - bytes
+      type: object
+      properties:
+        bytes:
+          minLength: 1
+          type: string
+          description: The file bytes encoded in Base 64 format.
+          format: byte
+      additionalProperties: false
+    Users.ParticipantUserModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        identifier:
+          type: string
+          description: >-
+            The user identifier (CPF in Brazil and Cédula de Identidad in
+            Ecuador/Paraguay).
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          type: string
+          description: "The user's mobile phone number. It will be set only if the user does not exist, i.e. it will not override\r\nexisting user's phones.\r\nMust use iternational format, example: +55 11 91234-5678"
+          nullable: true
+      additionalProperties: false
+    ValidationItemModel:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        innerValidationResults:
+          $ref: '#/components/schemas/ValidationResultsModel'
+      additionalProperties: false
+    ValidationResultsModel:
+      type: object
+      properties:
+        passedChecks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationItemModel'
+          nullable: true
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationItemModel'
+          nullable: true
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationItemModel'
+          nullable: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    WebhookTypes:
+      enum:
+        - DocumentConcluded
+        - InvoiceClosed
+        - DocumentRefused
+        - DocumentApproved
+        - DocumentSigned
+        - DocumentCanceled
+        - DocumentExpired
+        - DocumentsCreated
+      type: string
+    Webhooks.DocumentApprovedModel:
+      type: object
+      properties:
+        approval:
+          $ref: '#/components/schemas/FlowActions.ApprovalModel'
+        id:
+          type: string
+          description: The document's id
+          format: uuid
+        name:
+          type: string
+          description: The document's name
+          nullable: true
+        creationDate:
+          type: string
+          description: The date the document was created.
+          format: date-time
+        updateDate:
+          type: string
+          description: The date of the last update to the document.
+          format: date-time
+        folder:
+          $ref: '#/components/schemas/Folders.FolderInfoModel'
+        organization:
+          $ref: '#/components/schemas/Organizations.OrganizationInfoModel'
+        createdBy:
+          $ref: '#/components/schemas/Documents.CreatorModel'
+      additionalProperties: false
+    Webhooks.DocumentCanceledModel:
+      type: object
+      properties:
+        canceledBy:
+          $ref: '#/components/schemas/Agents.AgentModel'
+        reason:
+          type: string
+          nullable: true
+        id:
+          type: string
+          description: The document's id
+          format: uuid
+        name:
+          type: string
+          description: The document's name
+          nullable: true
+        creationDate:
+          type: string
+          description: The date the document was created.
+          format: date-time
+        updateDate:
+          type: string
+          description: The date of the last update to the document.
+          format: date-time
+        folder:
+          $ref: '#/components/schemas/Folders.FolderInfoModel'
+        organization:
+          $ref: '#/components/schemas/Organizations.OrganizationInfoModel'
+        createdBy:
+          $ref: '#/components/schemas/Documents.CreatorModel'
+      additionalProperties: false
+    Webhooks.DocumentConcludedModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The document's id
+          format: uuid
+        name:
+          type: string
+          description: The document's name
+          nullable: true
+        creationDate:
+          type: string
+          description: The date the document was created.
+          format: date-time
+        updateDate:
+          type: string
+          description: The date of the last update to the document.
+          format: date-time
+        folder:
+          $ref: '#/components/schemas/Folders.FolderInfoModel'
+        organization:
+          $ref: '#/components/schemas/Organizations.OrganizationInfoModel'
+        createdBy:
+          $ref: '#/components/schemas/Documents.CreatorModel'
+      additionalProperties: false
+    Webhooks.DocumentInformationModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The document's id
+          format: uuid
+        name:
+          type: string
+          description: The document's name
+          nullable: true
+        creationDate:
+          type: string
+          description: The date the document was created.
+          format: date-time
+        updateDate:
+          type: string
+          description: The date of the last update to the document.
+          format: date-time
+        folder:
+          $ref: '#/components/schemas/Folders.FolderInfoModel'
+        organization:
+          $ref: '#/components/schemas/Organizations.OrganizationInfoModel'
+        createdBy:
+          $ref: '#/components/schemas/Documents.CreatorModel'
+      additionalProperties: false
+    Webhooks.DocumentRefusedModel:
+      type: object
+      properties:
+        refusal:
+          $ref: '#/components/schemas/Refusal.RefusalModel'
+        id:
+          type: string
+          description: The document's id
+          format: uuid
+        name:
+          type: string
+          description: The document's name
+          nullable: true
+        creationDate:
+          type: string
+          description: The date the document was created.
+          format: date-time
+        updateDate:
+          type: string
+          description: The date of the last update to the document.
+          format: date-time
+        folder:
+          $ref: '#/components/schemas/Folders.FolderInfoModel'
+        organization:
+          $ref: '#/components/schemas/Organizations.OrganizationInfoModel'
+        createdBy:
+          $ref: '#/components/schemas/Documents.CreatorModel'
+      additionalProperties: false
+    Webhooks.DocumentSignedModel:
+      type: object
+      properties:
+        signature:
+          $ref: '#/components/schemas/FlowActions.SignatureModel'
+        id:
+          type: string
+          description: The document's id
+          format: uuid
+        name:
+          type: string
+          description: The document's name
+          nullable: true
+        creationDate:
+          type: string
+          description: The date the document was created.
+          format: date-time
+        updateDate:
+          type: string
+          description: The date of the last update to the document.
+          format: date-time
+        folder:
+          $ref: '#/components/schemas/Folders.FolderInfoModel'
+        organization:
+          $ref: '#/components/schemas/Organizations.OrganizationInfoModel'
+        createdBy:
+          $ref: '#/components/schemas/Documents.CreatorModel'
+      additionalProperties: false
+    Webhooks.DocumentsCreatedModel:
+      type: object
+      properties:
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhooks.DocumentInformationModel'
+          nullable: true
+      additionalProperties: false
+    Webhooks.InvoiceClosedModel:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        month:
+          type: integer
+          format: int32
+        year:
+          type: integer
+          format: int32
+        value:
+          type: number
+          format: double
+        invoiceTotals:
+          type: array
+          items:
+            $ref: '#/components/schemas/Invoices.InvoiceTotalModel'
+          nullable: true
+        organization:
+          $ref: '#/components/schemas/Organizations.OrganizationInfoModel'
+        billingInformation:
+          $ref: '#/components/schemas/Billing.BillingInformationModel'
+      additionalProperties: false
+    Webhooks.WebhookModel:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/WebhookTypes'
+        data:
+          description: >-
+            The type-specific data of this webhook event. Check the
+            documentation to see the corresponding model for an event type.
+          nullable: true
+      additionalProperties: false
+    XadesElementIdentifierTypes:
+      enum:
+        - Id
+        - XPath
+      type: string
+    XadesInsertionOptions:
+      enum:
+        - AppendChild
+        - PrependChild
+        - AppendSibling
+        - PrependSibling
+      type: string
+    XadesSignatureTypes:
+      enum:
+        - FullXml
+        - XmlElement
+        - FullXmlAdRc
+      type: string
+    XmlNamespaceModel:
+      required:
+        - prefix
+        - uri
+      type: object
+      properties:
+        prefix:
+          minLength: 1
+          type: string
+        uri:
+          minLength: 1
+          type: string
+      additionalProperties: false
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      description: API key authentication
+      name: X-Api-Key
+      in: header
+security:
+  - ApiKey: []
