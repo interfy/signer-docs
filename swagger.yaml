@@ -1,8 +1,8 @@
 openapi: 3.0.1
 info:
   title: Interfy Signer
-  description: "<!--------------------------------------------------------------------------------------------------------------------->\r\n\r\n<h2>Authentication</h2>\r\n\r\n<p>\r\n\tIn order to call this APIs, you will need an <strong>API key</strong>. Set the API key in the header <span class=\"code\">X-Api-Key</span>:\r\n</p>\r\n\r\n<pre>X-Api-Key: your-app|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</pre>\r\n\r\n<!--------------------------------------------------------------------------------------------------------------------->\r\n<br />\r\n\r\n<h2>HTTP Codes</h2>\r\n\r\n<p>\r\n\tThe APIs will return the following HTTP codes:\r\n</p>\r\n\r\n<table>\r\n\t<thead>\r\n\t\t<tr>\r\n\t\t\t<th>Code</th>\r\n\t\t\t<th>Description</th>\r\n\t\t</tr>\r\n\t</thead>\r\n\t<tbody>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">200 (OK)</strong></td>\r\n\t\t\t<td>Request processed successfully. The response is different for each API, please refer to the operation's documentation</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">400 (Bad Request)</strong></td>\r\n\t\t\t<td>Syntax error. For instance, when a required field was not provided</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">401 (Unauthorized)</strong></td>\r\n\t\t\t<td>API key not provided or invalid</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">403 (Forbidden)</strong></td>\r\n\t\t\t<td>API key is valid, but the application has insufficient permissions to complete the requested operation</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">422 (Unprocessable Entity)</strong></td>\r\n\t\t\t<td>API error. The response is as defined in <a href=\"#model-ErrorModel\">ErrorModel</a></td>\r\n\t\t</tr>\r\n\t</tbody>\r\n</table>\r\n\r\n<br />\r\n\r\n<h3>Error Codes</h3>\r\n\r\n<p>Some of the error codes returned in a 422 response are provided bellow*:</p>\r\n\r\n<ul>\r\n\t<li>CertificateNotFound</li>\r\n\t<li>DocumentNotFound</li>\r\n\t<li>FolderNotFound</li>\r\n\t<li>CpfMismatch</li>\r\n\t<li>CpfNotExpected</li>\r\n\t<li>InvalidFlowAction</li>\r\n\t<li>DocumentInvalidKey</li>\r\n</ul>\r\n\r\n<p style=\"font-size: 0.9em\">\r\n\t*The codes shown above are the main error codes. Nonetheless, this list is not comprehensive. New codes may be added anytime without previous warning.\r\n</p>\r\n\r\n<!--------------------------------------------------------------------------------------------------------------------->\r\n\r\n<br />\r\n\r\n<h2>Webhooks</h2>\r\n\r\n<p>\r\n\tIt is recomended to subscribe to Webhook events <strong>instead</strong> of polling APIs. To do so, enable webhooks and register an URL that will receive a POST request\r\n\twhenever one of the events bellow occur.\r\n</p>\r\n<p>\r\n\tAll requests have the format described in <a href=\"#model-Webhooks.WebhookModel\">Webhooks.WebhookModel</a>.\r\n\tThe data field varies according to the webhook event type:\r\n</p>\r\n\r\n\r\n<table>\r\n\t<thead>\r\n\t\t<tr>\r\n\t\t\t<th>Event type</th>\r\n\t\t\t<th>Description</th>\r\n\t\t\t<th>Payload</th>\r\n\t\t</tr>\r\n\t</thead>\r\n\t<tbody>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">DocumentSigned</strong></td>\r\n\t\t\t<td>Triggered when a document is signed.</td>\r\n\t\t\t<td><a href=\"#model-Webhooks.DocumentSignedModel\">Webhooks.DocumentSignedModel</a></td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">DocumentApproved</strong></td>\r\n\t\t\t<td>Triggered when a document is approved.</td>\r\n\t\t\t<td><a href=\"#model-Webhooks.DocumentApprovedModel\">Webhooks.DocumentApprovedModel</a></td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">DocumentRefused</strong></td>\r\n\t\t\t<td>Triggered when a document is refused.</td>\r\n\t\t\t<td><a href=\"#model-Webhooks.DocumentRefusedModel\">Webhooks.DocumentRefusedModel</a></td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">DocumentConcluded</strong></td>\r\n\t\t\t<td>Triggered when the flow of a document is concluded.</td>\r\n\t\t\t<td><a href=\"#model-Webhooks.DocumentConcludedModel\">Webhooks.DocumentConcludedModel</a></td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">DocumentCanceled</strong></td>\r\n\t\t\t<td>Triggered when the document is canceled.</td>\r\n\t\t\t<td><a href=\"#model-Webhooks.DocumentCanceledModel\">Webhooks.DocumentCanceledModel</a></td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong class=\"model-title\">DocumentsCreated (v1.50.0)</strong></td>\r\n\t\t\t<td>Triggered when one or more documents are created.</td>\r\n\t\t\t<td><a href=\"#model-Webhooks.DocumentsCreatedModel\">Webhooks.DocumentsCreatedModel</a></td>\r\n\t\t</tr>\r\n\t</tbody>\r\n</table>\r\n\r\n<p>\r\n\tTo register your application URL and enable Webhooks, access the integrations section in your <a href=\"/private/organizations\" target=\"_blank\">organization's details page</a>.\r\n</p>\r\n"
-  version: 1.59.0
+  description: "<!--------------------------------------------------------------------------------------------------------------------->\n\n<h2>Authentication</h2>\n\n<p>\n\tIn order to call this APIs, you will need an <strong>API key</strong>. Set the API key in the header <span class=\"code\">X-Api-Key</span>:\n</p>\n\n<pre>X-Api-Key: your-app|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</pre>\n\n<!--------------------------------------------------------------------------------------------------------------------->\n<br />\n\n<h2>HTTP Codes</h2>\n\n<p>\n\tThe APIs will return the following HTTP codes:\n</p>\n\n<table>\n\t<thead>\n\t\t<tr>\n\t\t\t<th>Code</th>\n\t\t\t<th>Description</th>\n\t\t</tr>\n\t</thead>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td><strong class=\"model-title\">200 (OK)</strong></td>\n\t\t\t<td>Request processed successfully. The response is different for each API, please refer to the operation's documentation</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><strong class=\"model-title\">400 (Bad Request)</strong></td>\n\t\t\t<td>Syntax error. For instance, when a required field was not provided</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><strong class=\"model-title\">401 (Unauthorized)</strong></td>\n\t\t\t<td>API key not provided or invalid</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><strong class=\"model-title\">403 (Forbidden)</strong></td>\n\t\t\t<td>API key is valid, but the application has insufficient permissions to complete the requested operation</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><strong class=\"model-title\">422 (Unprocessable Entity)</strong></td>\n\t\t\t<td>API error. The response is as defined in <a href=\"#model-ErrorModel\">ErrorModel</a></td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<br />\n\n<h3>Error Codes</h3>\n\n<p>Some of the error codes returned in a 422 response are provided bellow*:</p>\n\n<ul>\n\t<li>CertificateNotFound</li>\n\t<li>DocumentNotFound</li>\n\t<li>FolderNotFound</li>\n\t<li>CpfMismatch</li>\n\t<li>CpfNotExpected</li>\n\t<li>InvalidFlowAction</li>\n\t<li>DocumentInvalidKey</li>\n</ul>\n\n<p style=\"font-size: 0.9em\">\n\t*The codes shown above are the main error codes. Nonetheless, this list is not comprehensive. New codes may be added anytime without previous warning.\n</p>\n\n<!--------------------------------------------------------------------------------------------------------------------->\n\n<br />\n\n<h2>Webhooks</h2>\n\n<p>\n\tIt is recomended to subscribe to Webhook events <strong>instead</strong> of polling APIs. To do so, enable webhooks and register an URL that will receive a POST request\n\twhenever one of the events bellow occur.\n</p>\n<p>\n\tAll requests have the format described in <a href=\"#model-Webhooks.WebhookModel\">Webhooks.WebhookModel</a>.\n\tThe data field varies according to the webhook event type:\n</p>\n\n\n<table>\n\t<thead>\n\t\t<tr>\n\t\t\t<th>Event type</th>\n\t\t\t<th>Description</th>\n\t\t\t<th>Payload</th>\n\t\t</tr>\n\t</thead>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td><strong class=\"model-title\">DocumentSigned</strong></td>\n\t\t\t<td>Triggered when a document is signed.</td>\n\t\t\t<td><a href=\"#model-Webhooks.DocumentSignedModel\">Webhooks.DocumentSignedModel</a></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><strong class=\"model-title\">DocumentApproved</strong></td>\n\t\t\t<td>Triggered when a document is approved.</td>\n\t\t\t<td><a href=\"#model-Webhooks.DocumentApprovedModel\">Webhooks.DocumentApprovedModel</a></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><strong class=\"model-title\">DocumentRefused</strong></td>\n\t\t\t<td>Triggered when a document is refused.</td>\n\t\t\t<td><a href=\"#model-Webhooks.DocumentRefusedModel\">Webhooks.DocumentRefusedModel</a></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><strong class=\"model-title\">DocumentConcluded</strong></td>\n\t\t\t<td>Triggered when the flow of a document is concluded.</td>\n\t\t\t<td><a href=\"#model-Webhooks.DocumentConcludedModel\">Webhooks.DocumentConcludedModel</a></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><strong class=\"model-title\">DocumentCanceled</strong></td>\n\t\t\t<td>Triggered when the document is canceled.</td>\n\t\t\t<td><a href=\"#model-Webhooks.DocumentCanceledModel\">Webhooks.DocumentCanceledModel</a></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><strong class=\"model-title\">DocumentsCreated (v1.50.0)</strong></td>\n\t\t\t<td>Triggered when one or more documents are created.</td>\n\t\t\t<td><a href=\"#model-Webhooks.DocumentsCreatedModel\">Webhooks.DocumentsCreatedModel</a></td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p>\n\tTo register your application URL and enable Webhooks, access the integrations section in your <a href=\"/private/organizations\" target=\"_blank\">organization's details page</a>.\n</p>\n"
+  version: 1.71.0
 paths:
   /api/documents/keys/{key}/signatures:
     get:
@@ -519,6 +519,13 @@ paths:
             by tag value only, do not use the "|".
           schema:
             type: string
+        - name: IsDeleted
+          in: query
+          description: >-
+            Returns deleted documents that had the specified document status
+            when deleted.
+          schema:
+            type: boolean
         - name: Q
           in: query
           description: Query to filter items.
@@ -1378,6 +1385,244 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorModel'
+  /api/marks-sessions/{id}:
+    get:
+      tags:
+        - MarksSessions
+      summary: Retrieves session information.
+      parameters:
+        - name: id
+          in: path
+          description: The session ID obtained when the session was created
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DocumentMark.MarksSessionModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentMark.MarksSessionModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/DocumentMark.MarksSessionModel'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/marks-sessions:
+    post:
+      tags:
+        - MarksSessions
+      summary: Creates a mark positioning session by requiring only the necessary data.
+      description: "The purpose of the positioning session is to allow users to visually position signer marks.\r\nThe result of the session is the same request provided while creating it but with the flowAction's prePositioned marks attribute\r\nfilled according to the positions selected for each action.<br /><br />\r\nResult will be available by iFrame event when embedding the positioning session or by retrieving the session information via the GET API."
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/DocumentMark.MarksSessionCreateRequest'
+            example:
+              files:
+                - id: 0429c723-a66d-4e55-a912-ff636d1b2745
+                  name: Contrato.pdf
+                  contentType: application/pdf
+              isEnvelope: false
+              flowActions:
+                - type: Signer
+                  step: 1
+                  user:
+                    name: John Wick
+                    identifier: '81976153069'
+                    email: john.wick@mailinator.com
+                  signatureInitialsMode: None
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentMark.MarksSessionCreateRequest'
+            example:
+              files:
+                - id: 0429c723-a66d-4e55-a912-ff636d1b2745
+                  name: Contrato.pdf
+                  contentType: application/pdf
+              isEnvelope: false
+              flowActions:
+                - type: Signer
+                  step: 1
+                  user:
+                    name: John Wick
+                    identifier: '81976153069'
+                    email: john.wick@mailinator.com
+                  signatureInitialsMode: None
+          text/json:
+            schema:
+              $ref: '#/components/schemas/DocumentMark.MarksSessionCreateRequest'
+            example:
+              files:
+                - id: 0429c723-a66d-4e55-a912-ff636d1b2745
+                  name: Contrato.pdf
+                  contentType: application/pdf
+              isEnvelope: false
+              flowActions:
+                - type: Signer
+                  step: 1
+                  user:
+                    name: John Wick
+                    identifier: '81976153069'
+                    email: john.wick@mailinator.com
+                  signatureInitialsMode: None
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/DocumentMark.MarksSessionCreateRequest'
+            example:
+              files:
+                - id: 0429c723-a66d-4e55-a912-ff636d1b2745
+                  name: Contrato.pdf
+                  contentType: application/pdf
+              isEnvelope: false
+              flowActions:
+                - type: Signer
+                  step: 1
+                  user:
+                    name: John Wick
+                    identifier: '81976153069'
+                    email: john.wick@mailinator.com
+                  signatureInitialsMode: None
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DocumentMark.MarksSessionCreateResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentMark.MarksSessionCreateResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/DocumentMark.MarksSessionCreateResponse'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/marks-sessions/documents:
+    post:
+      tags:
+        - MarksSessions
+      summary: Creates a mark positioning session from a Document create request.
+      description: "The purpose of the positioning session is to allow users to visually position signer marks.\r\nThe result of the session is the same request provided while creating it but with the flowAction's prePositioned marks attribute\r\nfilled according to the positions selected for each action.<br /><br />\r\nResult will be available by iFrame event when embedding the positioning session or by retrieving the session information via the GET API."
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Documents.CreateDocumentRequest'
+            example:
+              files:
+                - displayName: Contrato Swagger
+                  id: 0429c723-a66d-4e55-a912-ff636d1b2745
+                  name: Contrato.pdf
+                  contentType: application/pdf
+              flowActions:
+                - type: Signer
+                  step: 1
+                  user:
+                    name: John Wick
+                    identifier: '81976153069'
+                    email: john.wick@mailinator.com
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Documents.CreateDocumentRequest'
+            example:
+              files:
+                - displayName: Contrato Swagger
+                  id: 0429c723-a66d-4e55-a912-ff636d1b2745
+                  name: Contrato.pdf
+                  contentType: application/pdf
+              flowActions:
+                - type: Signer
+                  step: 1
+                  user:
+                    name: John Wick
+                    identifier: '81976153069'
+                    email: john.wick@mailinator.com
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Documents.CreateDocumentRequest'
+            example:
+              files:
+                - displayName: Contrato Swagger
+                  id: 0429c723-a66d-4e55-a912-ff636d1b2745
+                  name: Contrato.pdf
+                  contentType: application/pdf
+              flowActions:
+                - type: Signer
+                  step: 1
+                  user:
+                    name: John Wick
+                    identifier: '81976153069'
+                    email: john.wick@mailinator.com
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Documents.CreateDocumentRequest'
+            example:
+              files:
+                - displayName: Contrato Swagger
+                  id: 0429c723-a66d-4e55-a912-ff636d1b2745
+                  name: Contrato.pdf
+                  contentType: application/pdf
+              flowActions:
+                - type: Signer
+                  step: 1
+                  user:
+                    name: John Wick
+                    identifier: '81976153069'
+                    email: john.wick@mailinator.com
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DocumentMark.MarksSessionCreateResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentMark.MarksSessionCreateResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/DocumentMark.MarksSessionCreateResponse'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
   /api/notifications/flow-action-reminder:
     post:
       tags:
@@ -1441,6 +1686,133 @@ paths:
           application/*+json:
             schema:
               $ref: '#/components/schemas/Notifications.EmailListNotificationRequest'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/organizations/users:
+    get:
+      tags:
+        - Organizations
+      summary: List organization users
+      parameters:
+        - name: Q
+          in: query
+          description: Query to filter items.
+          schema:
+            type: string
+        - name: Limit
+          in: query
+          description: Number of items to return.
+          schema:
+            type: integer
+            format: int32
+        - name: Offset
+          in: query
+          description: The offset of the searched page (starting with 0).
+          schema:
+            type: integer
+            format: int32
+        - name: Order
+          in: query
+          schema:
+            $ref: '#/components/schemas/PaginationOrders'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedSearchResponse[Organizations.OrganizationUserModel]
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedSearchResponse[Organizations.OrganizationUserModel]
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedSearchResponse[Organizations.OrganizationUserModel]
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      tags:
+        - Organizations
+      summary: Adds a user to the organization
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Organizations.OrganizationUserPostRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organizations.OrganizationUserPostRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Organizations.OrganizationUserPostRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Organizations.OrganizationUserPostRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Organizations.OrganizationUserModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organizations.OrganizationUserModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Organizations.OrganizationUserModel'
+        '400':
+          description: Syntax error, for instance when a required field is not specified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: Semantic error, for instance when a given entity ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/organizations/users/{userId}:
+    delete:
+      tags:
+        - Organizations
+      summary: Deletes a user from organization
+      parameters:
+        - name: userId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         '200':
           description: Success
@@ -1651,7 +2023,7 @@ components:
           type: string
           description: >-
             The Id of the uploaded attachment, from the request
-            Signer.Api.UploadModel.Id.
+            UploadModel.Id.
           nullable: true
         attachmentId:
           type: string
@@ -1819,6 +2191,7 @@ components:
         - OriginalWithMarks
         - SigningTags
         - SignatureMarks
+        - SignaturesManifest
       type: string
     DocumentFilterStatus:
       enum:
@@ -1956,6 +2329,80 @@ components:
         type:
           $ref: '#/components/schemas/DocumentMarkType'
       additionalProperties: false
+    DocumentMark.FlowActionPositionModel:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        type:
+          $ref: '#/components/schemas/FlowActionType'
+        user:
+          $ref: '#/components/schemas/Users.ParticipantUserModel'
+        signatureInitialsMode:
+          $ref: '#/components/schemas/SignatureInitialsModes'
+        ruleName:
+          type: string
+          nullable: true
+        numberRequiredSignatures:
+          type: integer
+          format: int32
+          nullable: true
+        prePositionedMarks:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentMark.PrePositionedDocumentMarkModel'
+          nullable: true
+      additionalProperties: false
+    DocumentMark.MarksSessionCreateRequest:
+      required:
+        - files
+        - flowActions
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/UploadModel'
+        isEnvelope:
+          type: boolean
+          description: >-
+            If true, groups all files into a single document (the envelope). All
+            files must be in PDF format.
+        flowActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentMark.FlowActionPositionModel'
+        signatureType:
+          $ref: '#/components/schemas/SignatureTypes'
+      additionalProperties: false
+    DocumentMark.MarksSessionCreateResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        embedUrl:
+          type: string
+          description: >-
+            The URL to embed the session in a iframe to use in your own
+            application.
+          nullable: true
+      additionalProperties: false
+    DocumentMark.MarksSessionModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentMark.UploadTicketModel'
+          nullable: true
+        data:
+          nullable: true
+      additionalProperties: false
     DocumentMark.PrePositionedDocumentMarkModel:
       type: object
       properties:
@@ -1990,6 +2437,16 @@ components:
       description: >-
         Model used to set the position of a document mark before it's associated
         flow action is completed.
+    DocumentMark.UploadTicketModel:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        location:
+          type: string
+          nullable: true
+      additionalProperties: false
     DocumentMarkType:
       enum:
         - SignatureVisualRepresentation
@@ -2021,6 +2478,7 @@ components:
         - OriginalWithMarks
         - SigningTags
         - SignatureMarks
+        - SignaturesManifest
       type: string
     DocumentTypes:
       enum:
@@ -2057,6 +2515,14 @@ components:
             If action is an electronic signature and this parameter is set to
             true, requires e-mail authentication with code in order to complete
             the signature.
+        flowActionId:
+          type: string
+          description: >-
+            The ID of the flow action for which the ticket will be generated. It
+            should only be provided if there are more than one pending action
+            for the participant.
+          format: uuid
+          nullable: true
       additionalProperties: false
     Documents.ActionUrlResponse:
       type: object
@@ -2107,7 +2573,8 @@ components:
             $ref: '#/components/schemas/XmlNamespaceModel'
           description: >-
             Optional parameter for XML documents. This namespace will be used by
-            all files in Signer.Api.Documents.CreateDocumentRequest.Files.
+            all files in
+            Documents.CreateDocumentRequest.Files.
           nullable: true
         isEnvelope:
           type: boolean
@@ -2176,6 +2643,12 @@ components:
           items:
             $ref: '#/components/schemas/Documents.DocumentTagData'
           nullable: true
+        signatureType:
+          $ref: '#/components/schemas/SignatureTypes'
+        securityContextId:
+          type: string
+          format: uuid
+          nullable: true
         expirationDate:
           type: string
           description: "The expiration date of the document. Any time information will be discarded, as the expiration will be set \r\nto the last time available for the chosen date in the default timezone."
@@ -2189,7 +2662,7 @@ components:
           type: string
           description: >-
             The Id of the uploaded file, from the request
-            Signer.Api.UploadModel.Id.
+            UploadModel.Id.
           nullable: true
         documentId:
           type: string
@@ -2297,7 +2770,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FlowActions.FlowActionCreateModel'
-          description: "The actions to be added to the flow.\r\nThe Signer.Api.FlowActions.FlowActionCreateModel.Step must be greater or equal to the current pending step."
+          description: "The actions to be added to the flow.\r\nThe FlowActions.FlowActionCreateModel.Step must be greater or equal to the current pending step."
           nullable: true
         editedFlowActions:
           type: array
@@ -2422,8 +2895,8 @@ components:
           type: boolean
           description: >-
             [DEPRECATED] True if all actions requested in the document are
-            concluded. Please use Signer.Api.Documents.DocumentInfoModel.Status
-            instead.
+            concluded. Please use
+            Documents.DocumentInfoModel.Status instead.
         folder:
           $ref: '#/components/schemas/Folders.FolderInfoModel'
         organization:
@@ -2464,7 +2937,7 @@ components:
           type: boolean
           description: >-
             True if the document is an envelope
-            (Signer.Api.Documents.CreateDocumentRequest.IsEnvelope).
+            (Documents.CreateDocumentRequest.IsEnvelope).
         statusUpdatedBy:
           $ref: '#/components/schemas/Agents.AgentModel'
         statusUpdateReason:
@@ -2476,6 +2949,10 @@ components:
           items:
             $ref: '#/components/schemas/Documents.DocumentTagModel'
           nullable: true
+        signatureType:
+          $ref: '#/components/schemas/SignatureTypes'
+        securityContext:
+          $ref: '#/components/schemas/SecurityContexts.SecurityContextSimpleModel'
       additionalProperties: false
     Documents.DocumentNotifiedEmailsEditRequest:
       type: object
@@ -2535,6 +3012,10 @@ components:
           $ref: '#/components/schemas/DocumentStatus'
         type:
           $ref: '#/components/schemas/DocumentTypes'
+        signatureType:
+          $ref: '#/components/schemas/SignatureTypes'
+        securityContext:
+          $ref: '#/components/schemas/SecurityContexts.SecurityContextSimpleModel'
       additionalProperties: false
     Documents.DocumentTagData:
       required:
@@ -2614,14 +3095,15 @@ components:
           nullable: true
         folderId:
           type: string
-          description: "The Id of the folder to which the document(s) will be moved.\r\nThe folder Id can be null if you want to move the document(s) to no folder or if you want to create a new folder using Signer.Api.Documents.MoveDocumentRequest.NewFolderName."
+          description: "The Id of the folder to which the document(s) will be moved.\r\nThe folder Id can be null if you want to move the document(s) to no folder or if you want to create a new folder using Documents.MoveDocumentRequest.NewFolderName."
           format: uuid
           nullable: true
         newFolderName:
           type: string
           description: >-
             The name of the folder to be created and the documents will be moved
-            to. (If Signer.Api.Documents.MoveDocumentRequest.FolderId is null)
+            to. (If Documents.MoveDocumentRequest.FolderId is
+            null)
           nullable: true
       additionalProperties: false
     Documents.MoveDocumentRequest:
@@ -2629,14 +3111,15 @@ components:
       properties:
         folderId:
           type: string
-          description: "The Id of the folder to which the document(s) will be moved.\r\nThe folder Id can be null if you want to move the document(s) to no folder or if you want to create a new folder using Signer.Api.Documents.MoveDocumentRequest.NewFolderName."
+          description: "The Id of the folder to which the document(s) will be moved.\r\nThe folder Id can be null if you want to move the document(s) to no folder or if you want to create a new folder using Documents.MoveDocumentRequest.NewFolderName."
           format: uuid
           nullable: true
         newFolderName:
           type: string
           description: >-
             The name of the folder to be created and the documents will be moved
-            to. (If Signer.Api.Documents.MoveDocumentRequest.FolderId is null)
+            to. (If Documents.MoveDocumentRequest.FolderId is
+            null)
           nullable: true
       additionalProperties: false
     ErrorModel:
@@ -2792,7 +3275,7 @@ components:
           description: >-
             Requires the user to confirm a code sent to his phone to sign
             electronically. (If
-            Signer.Api.FlowActions.FlowActionCreateModel.AllowElectronicSignature
+            FlowActions.FlowActionCreateModel.AllowElectronicSignature
             is true)
           nullable: true
         requireWhatsappAuthenticationToSignElectronically:
@@ -2800,7 +3283,7 @@ components:
           description: >-
             Requires the user to confirm a code sent to his Whatsapp number to
             sign electronically. (If
-            Signer.Api.FlowActions.FlowActionCreateModel.AllowElectronicSignature
+            FlowActions.FlowActionCreateModel.AllowElectronicSignature
             is true)
           nullable: true
         requireAuthenticatorAppToSignElectronically:
@@ -2808,14 +3291,14 @@ components:
           description: >-
             Requires the user to enter a one-time password (OTP) to sign
             electronically. (If
-            Signer.Api.FlowActions.FlowActionCreateModel.AllowElectronicSignature
+            FlowActions.FlowActionCreateModel.AllowElectronicSignature
             is true)
           nullable: true
         requireSelfieAuthenticationToSignElectronically:
           type: boolean
           description: >-
             Requires the user to take a selfie to sign electronically. (If
-            Signer.Api.FlowActions.FlowActionCreateModel.AllowElectronicSignature
+            FlowActions.FlowActionCreateModel.AllowElectronicSignature
             is true)
           nullable: true
         requireDatavalidAuthenticationToSignElectronically:
@@ -2823,14 +3306,14 @@ components:
           description: >-
             Requires the user to take a selfie to sign electronically. This
             selfie will be validated by SERPRO's Datavalid. (If
-            Signer.Api.FlowActions.FlowActionCreateModel.AllowElectronicSignature
+            FlowActions.FlowActionCreateModel.AllowElectronicSignature
             is true)
           nullable: true
         requirePixAuthenticationToSignElectronically:
           type: boolean
           description: >-
             Requires the user to pay a Pix to sign electronically. (If
-            Signer.Api.FlowActions.FlowActionCreateModel.AllowElectronicSignature
+            FlowActions.FlowActionCreateModel.AllowElectronicSignature
             is true)
           nullable: true
         disableEmailAuthenticationToSignElectronically:
@@ -2838,7 +3321,7 @@ components:
           description: >-
             Disables e-mail authentication to sign electronically. This option
             can only be used if SMS or Whatsapp authentication was required. (If
-            Signer.Api.FlowActions.FlowActionCreateModel.AllowElectronicSignature
+            FlowActions.FlowActionCreateModel.AllowElectronicSignature
             is true)
           nullable: true
         requiredCertificateTypeToSign:
@@ -2848,7 +3331,7 @@ components:
           description: >-
             [DEPRECATED] Requires the user to sign the document with a company
             certificate (e.g. e-CNPJ). Please use
-            Signer.Api.FlowActions.FlowActionCreateModel.RequiredCertificateHolderTypeToSign
+            FlowActions.FlowActionCreateModel.RequiredCertificateHolderTypeToSign
             instead.
           nullable: true
         requiredCompanyIdentifier:
@@ -2879,15 +3362,15 @@ components:
           type: string
           description: >-
             The new email address of the action's participant (if the type is
-            Signer.Api.FlowActionType.Signer or
-            Signer.Api.FlowActionType.Approver).
+            FlowActionType.Signer or
+            FlowActionType.Approver).
           format: email
           nullable: true
         ruleName:
           type: string
           description: >-
             The new rule name (if the type is
-            Signer.Api.FlowActionType.SignRule).
+            FlowActionType.SignRule).
           nullable: true
         signRuleUsers:
           type: array
@@ -2895,7 +3378,7 @@ components:
             $ref: '#/components/schemas/FlowActions.SignRuleUserEditModel'
           description: >-
             The rule users to be edited (if the type is
-            Signer.Api.FlowActionType.SignRule).
+            FlowActionType.SignRule).
           nullable: true
         title:
           type: string
@@ -2948,54 +3431,54 @@ components:
             (only if the type of the action is Signer or SignRule)
         requireEmailAuthenticationToSignElectronically:
           type: boolean
-          description: "Requires the user to confirm a code sent to his e-mail to sign electronically. (If Signer.Api.FlowActions.FlowActionModel.AllowElectronicSignature is true)\r\nThis requirement is not enforced if the user is logged in or was authenticated by an application (embedded signature mode)."
+          description: "Requires the user to confirm a code sent to his e-mail to sign electronically. (If FlowActions.FlowActionModel.AllowElectronicSignature is true)\r\nThis requirement is not enforced if the user is logged in or was authenticated by an application (embedded signature mode)."
           nullable: true
         requireSmsAuthenticationToSignElectronically:
           type: boolean
           description: >-
             Requires the user to confirm a code sent to his phone to sign
             electronically. (If
-            Signer.Api.FlowActions.FlowActionModel.AllowElectronicSignature is
-            true)
+            FlowActions.FlowActionModel.AllowElectronicSignature
+            is true)
           nullable: true
         requireWhatsappAuthenticationToSignElectronically:
           type: boolean
           description: >-
             Requires the user to confirm a code sent to his Whatsapp number to
             sign electronically. (If
-            Signer.Api.FlowActions.FlowActionModel.AllowElectronicSignature is
-            true)
+            FlowActions.FlowActionModel.AllowElectronicSignature
+            is true)
           nullable: true
         requireAuthenticatorAppToSignElectronically:
           type: boolean
           description: >-
             Requires the user to enter a one-time password (OTP) to sign
             electronically. (If
-            Signer.Api.FlowActions.FlowActionModel.AllowElectronicSignature is
-            true)
+            FlowActions.FlowActionModel.AllowElectronicSignature
+            is true)
           nullable: true
         requireSelfieAuthenticationToSignElectronically:
           type: boolean
           description: >-
             Requires the user to take a selfie to sign electronically. (If
-            Signer.Api.FlowActions.FlowActionModel.AllowElectronicSignature is
-            true)
+            FlowActions.FlowActionModel.AllowElectronicSignature
+            is true)
           nullable: true
         requireDatavalidAuthenticationToSignElectronically:
           type: boolean
           description: >-
             Requires the user to take a selfie to sign electronically. This
             selfie will be validated by SERPRO's Datavalid. (If
-            Signer.Api.FlowActions.FlowActionModel.AllowElectronicSignature is
-            true)
+            FlowActions.FlowActionModel.AllowElectronicSignature
+            is true)
           nullable: true
         requirePixAuthenticationToSignElectronically:
           type: boolean
           description: >-
             Requires the user to pay a Pix to sign electronically. The payer's
             CPF must be the same as that of the user who will be signing. (If
-            Signer.Api.FlowActions.FlowActionModel.AllowElectronicSignature is
-            true)
+            FlowActions.FlowActionModel.AllowElectronicSignature
+            is true)
           nullable: true
         requiredCertificateTypeToSign:
           $ref: '#/components/schemas/CertificateTypes'
@@ -3004,7 +3487,7 @@ components:
           description: >-
             [DEPRECATED] The user is required to sign the document with a
             company certificate (e.g. e-CNPJ). Please use
-            Signer.Api.FlowActions.FlowActionModel.RequiredCertificateHolderTypeToSign
+            FlowActions.FlowActionModel.RequiredCertificateHolderTypeToSign
             instead.
           nullable: true
         requiredCompanyIdentifier:
@@ -3149,7 +3632,7 @@ components:
           $ref: '#/components/schemas/XadesElementIdentifierTypes'
         elementToSignIdentifier:
           type: string
-          description: "A string used to identify the element that should be signed.\r\nIf the Signer.Api.FlowActions.XadesOptionsModel.ElementToSignIdentifierType is Signer.Api.XadesElementIdentifierTypes.Id, this string is the Id of the element to be signed.\r\nIf the Signer.Api.FlowActions.XadesOptionsModel.ElementToSignIdentifierType is Signer.Api.XadesElementIdentifierTypes.XPath, this string is the XPath to the element to be signed."
+          description: "A string used to identify the element that should be signed.\r\nIf the FlowActions.XadesOptionsModel.ElementToSignIdentifierType is XadesElementIdentifierTypes.Id, this string is the Id of the element to be signed.\r\nIf the FlowActions.XadesOptionsModel.ElementToSignIdentifierType is XadesElementIdentifierTypes.XPath, this string is the XPath to the element to be signed."
           nullable: true
         insertionOption:
           $ref: '#/components/schemas/XadesInsertionOptions'
@@ -3183,7 +3666,7 @@ components:
           $ref: '#/components/schemas/DeleteAction'
         destinationFolderId:
           type: string
-          description: "The folder to which the documents will be moved (if Signer.Api.Folders.FolderDeleteRequest.DeleteAction is Signer.Api.DeleteAction.MoveContent).\r\nThis value can be null if you want to keep the documents with no folder."
+          description: "The folder to which the documents will be moved (if Folders.FolderDeleteRequest.DeleteAction is DeleteAction.MoveContent).\r\nThis value can be null if you want to keep the documents with no folder."
           format: uuid
           nullable: true
       additionalProperties: false
@@ -3362,6 +3845,16 @@ components:
         - Personal
         - SharedWithMe
       type: string
+    Organizations.AccessProfileModel:
+      type: object
+      properties:
+        administrator:
+          type: boolean
+        manager:
+          type: boolean
+        operator:
+          type: boolean
+      additionalProperties: false
     Organizations.OrganizationInfoModel:
       type: object
       properties:
@@ -3386,6 +3879,52 @@ components:
           format: uuid
         name:
           type: string
+          nullable: true
+      additionalProperties: false
+    Organizations.OrganizationUserModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        identifier:
+          type: string
+          nullable: true
+        accessProfile:
+          $ref: '#/components/schemas/Organizations.AccessProfileModel'
+      additionalProperties: false
+    Organizations.OrganizationUserPostRequest:
+      type: object
+      properties:
+        accessProfile:
+          $ref: '#/components/schemas/Organizations.AccessProfileModel'
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        identifier:
+          type: string
+          description: >-
+            The user identifier (CPF in Brazil and Cédula de Identidad in
+            Ecuador/Paraguay).
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          type: string
+          description: "The user's mobile phone number. It will be set only if the user does not exist, i.e. it will not override\r\nexisting user's phones.\r\nMust use iternational format, example: +55 11 91234-5678"
           nullable: true
       additionalProperties: false
     PaginatedSearchResponse[DocumentFlows.DocumentFlowModel]:
@@ -3425,6 +3964,21 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Folders.FolderInfoModel'
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+        nextCursor:
+          type: string
+          nullable: true
+      additionalProperties: false
+    PaginatedSearchResponse[Organizations.OrganizationUserModel]:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Organizations.OrganizationUserModel'
           nullable: true
         totalCount:
           type: integer
@@ -3488,6 +4042,47 @@ components:
           minLength: 1
           type: string
       additionalProperties: false
+    SecurityContexts.AuthenticationTypesModel:
+      type: object
+      properties:
+        sms:
+          type: boolean
+        whatsapp:
+          type: boolean
+        otp:
+          type: boolean
+        selfie:
+          type: boolean
+        datavalid:
+          type: boolean
+        pix:
+          type: boolean
+        email:
+          type: boolean
+      additionalProperties: false
+    SecurityContexts.SecurityContextSimpleModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        englishName:
+          type: string
+          nullable: true
+        portugueseName:
+          type: string
+          nullable: true
+        spanishName:
+          type: string
+          nullable: true
+        allowDigitalSignature:
+          type: boolean
+        allowedElectronicTypes:
+          $ref: '#/components/schemas/SecurityContexts.AuthenticationTypesModel'
+      additionalProperties: false
     Signature.DatavalidSelfieValidationResponse:
       type: object
       properties:
@@ -3516,15 +4111,15 @@ components:
           nullable: true
         accountVerifiedEmail:
           type: string
-          description: "If the user was logged-in when he signed the document this is the verified email of his account.\r\nIf Signer.Api.Signature.EvidencesModel.AuthenticationTypes doesn't contains Signer.Api.AuthenticationTypes.Login this will be null."
+          description: "If the user was logged-in when he signed the document this is the verified email of his account.\r\nIf Signature.EvidencesModel.AuthenticationTypes doesn't contains AuthenticationTypes.Login this will be null."
           nullable: true
         authenticatedEmail:
           type: string
-          description: "The email to which the notification to sign the document was sent.\r\nIf Signer.Api.Signature.EvidencesModel.AuthenticationTypes doesn't contains Signer.Api.AuthenticationTypes.Email this will be null."
+          description: "The email to which the notification to sign the document was sent.\r\nIf Signature.EvidencesModel.AuthenticationTypes doesn't contains AuthenticationTypes.Email this will be null."
           nullable: true
         authenticatedPhoneNumberLastDigits:
           type: string
-          description: "The last four digits of the phone number to which the SMS confirmation code was sent.\r\nIf Signer.Api.Signature.EvidencesModel.AuthenticationTypes doesn't contains Signer.Api.AuthenticationTypes.SMS this will be null."
+          description: "The last four digits of the phone number to which the SMS confirmation code was sent.\r\nIf Signature.EvidencesModel.AuthenticationTypes doesn't contains AuthenticationTypes.SMS this will be null."
           nullable: true
         authenticatedApplication:
           $ref: '#/components/schemas/Applications.ApplicationDisplayModel'
@@ -3543,7 +4138,7 @@ components:
           nullable: true
         authenticatedPhoneNumber:
           type: string
-          description: "The phone number to which the SMS confirmation code was sent.\r\nIf Signer.Api.Signature.EvidencesModel.AuthenticationTypes doesn't contains Signer.Api.AuthenticationTypes.SMS this will be null."
+          description: "The phone number to which the SMS confirmation code was sent.\r\nIf Signature.EvidencesModel.AuthenticationTypes doesn't contains AuthenticationTypes.SMS this will be null."
           nullable: true
         file:
           type: string
@@ -3612,12 +4207,25 @@ components:
         mimeType:
           minLength: 1
           type: string
+        signatureType:
+          $ref: '#/components/schemas/SignatureTypes'
+        securityContextId:
+          type: string
+          format: uuid
+          nullable: true
       additionalProperties: false
     SignatureInitialsModes:
       enum:
         - None
         - Optional
         - Required
+      type: string
+    SignatureTypes:
+      enum:
+        - None
+        - Simple
+        - Advanced
+        - Qualified
       type: string
     SignerModel:
       type: object
@@ -3716,8 +4324,8 @@ components:
           type: number
           description: >-
             Price of the transaction type (if
-            Signer.Api.Transactions.TransactionPriceModel.PricingType is
-            Signer.Api.TransactionPricingTypes.Simple)
+            Transactions.TransactionPriceModel.PricingType is
+            TransactionPricingTypes.Simple)
           format: double
           nullable: true
         priceRanges:
@@ -3726,8 +4334,8 @@ components:
             $ref: '#/components/schemas/Transactions.PriceRangeModel'
           description: >-
             Price ranges of transaction type (if
-            Signer.Api.Transactions.TransactionPriceModel.PricingType is
-            Signer.Api.TransactionPricingTypes.Range)
+            Transactions.TransactionPriceModel.PricingType is
+            TransactionPricingTypes.Range)
           nullable: true
         limit:
           type: integer
